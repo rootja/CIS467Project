@@ -26,7 +26,7 @@ public class Player : MonoBehaviour {
 	void Start () {
 
 		// Assigns values to the column and row variables.
-		SetupBoard (2, 2);
+		SetupBoard (4, 4);
 
 		// Creates a series of black squares based on the column and row input values.
 		// Added from the origin(0,0).
