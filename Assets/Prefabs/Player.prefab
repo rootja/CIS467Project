@@ -13,7 +13,7 @@ GameObject:
   - 61: {fileID: 6142478}
   - 50: {fileID: 5039472}
   - 114: {fileID: 11463750}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -112,7 +112,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1413569959
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -134,6 +134,22 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_IsKinematic
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_SortingLayerID
+      value: -1413569959
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: tile
+      value: 
+      objectReference: {fileID: 178102, guid: 70e2cd5ab958d4f38ba9aa0f87fa37ad, type: 2}
+    - target: {fileID: 0}
+      propertyPath: myName
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

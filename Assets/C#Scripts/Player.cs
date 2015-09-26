@@ -3,45 +3,43 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	// A string variable that we can change while playing the game or outside Play mode.
-	public string myName;
-
+	// The amount of health the player has.
+	int health;
+	// The player's current level.
+	int level;
+	// The amount of rupees that the player currently has..
+	int currency;
+	// The amount of experience the player has earned.
+	int experience;
+	
 	int rows;
 	int columns;
 
-	public void SetupBoard(int rows = 1, int columns = 1){
-		// Makes sure the rows value is greater than 0.
-		if(rows > 0)
-			this.rows = rows;
-		else
-			this.rows = 1;
-		// Makes sure the columns value is greater than 0.
-		if (columns > 0)
-			this.columns = columns;
-		else
-			this.columns = 1;
+	// A string variable that we can change while playing the game or outside Play mode.
+	public string myName;
+
+	public void InitPlayer(string playerName = "Link"){
+		health = 3;
+		level = 1;
+		currency = 0;
+		experience = 0;
+		myName = playerName;
+	}
+
+	// Sets the borders for the player movement.
+	void SetMoveLimits(){
+		// NOTE: Hardcoded movement limits for now until BoardManager variables can be transferred.
+		rows = 2;
+		columns = 2;
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		// Ititializes the player stats.
+		InitPlayer ();
+		SetMoveLimits ();
 
-		// Assigns values to the column and row variables.
-		SetupBoard (4, 4);
-
-		// Creates a series of black squares based on the column and row input values.
-		// Added from the origin(0,0).
-		// In a case where rows = 2 and columns = 2, then the board will have a tile at
-		// the origin (0,0) as well as every other location around it within 2 blocks of
-		// the origin point.
-		for (int i = rows*-1; i <= rows; i++) {
-			for(int j = columns*-1; j <= columns; j++){
-				// A black tile object.
-				GameObject block = GameObject.CreatePrimitive(PrimitiveType.Quad);
-				// Adds the block to the scene.
-				Instantiate(block, new Vector2(i, j), Quaternion.identity);
-			}
-		}
-	}
+		Debug.Log ("Player => Columns: " + columns + " Rows: " + rows);	}
 
 	// Update is called once per frame
 	void Update () {
