@@ -166,6 +166,10 @@ public class Player : Unit {
 			if (Input.GetKeyDown (keyATTACK)) {
 				jump (x,y);
 			}
+			// Skips the turn.
+			if (Input.GetKeyDown (keyITEM)) {
+				moves -= 3;
+			}
 			
 		}
 		
