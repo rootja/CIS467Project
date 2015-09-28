@@ -39,8 +39,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8df9984cdf5f4e7ebab20e3e2f0565d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   player: {fileID: 143324, guid: dbaef6d91f6014c48a7634cc7353fd5f, type: 2}
+  cynthia: {fileID: 127472, guid: 9a1c0250669bf57478a2d36c4183ac74, type: 2}
 --- !u!114 &11495568
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -159,6 +160,9 @@ Prefab:
       propertyPath: items.Array.data[5]
       value: 
       objectReference: {fileID: 105058, guid: a60f6bba7b45545eeb337ea8af3e19e0, type: 2}
+      propertyPath: cynthia
+      value: 
+      objectReference: {fileID: 127472, guid: 9a1c0250669bf57478a2d36c4183ac74, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 153900}
