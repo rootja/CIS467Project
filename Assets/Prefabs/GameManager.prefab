@@ -41,6 +41,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 124456, guid: dbaef6d91f6014c48a7634cc7353fd5f, type: 2}
+  cynthia: {fileID: 127472, guid: 9a1c0250669bf57478a2d36c4183ac74, type: 2}
 --- !u!114 &11495568
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -79,6 +80,10 @@ Prefab:
       propertyPath: wallTile
       value: 
       objectReference: {fileID: 117544, guid: e8ce4e46c57a74905bbf59270f464a0d, type: 2}
+    - target: {fileID: 0}
+      propertyPath: cynthia
+      value: 
+      objectReference: {fileID: 127472, guid: 9a1c0250669bf57478a2d36c4183ac74, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 153900}
