@@ -11,33 +11,33 @@ public class Player : UnitMovement {
 	 */
 
 	// Up
-	static string keyUP = "up";
+    public	static string keyUP = "up";
 	// Down
-	static string keyDOWN = "down";
+	public	static string keyDOWN = "down";
 	// Left
-	static string keyLEFT = "left";
+	public static string keyLEFT = "left";
 	// Right
-	static string keyRIGHT = "right";
+	public static string keyRIGHT = "right";
 
 	// Enter walking mode and walk
-	static string keyMOVE = "a";
+	public static string keyMOVE = "a";
 	// Enter targeting mode and attack
-	static string keyATTACK = "s";
+	public static string keyATTACK = "s";
 	// Open Inventory to use items?
-	static string keyITEM = "d";
+	public static string keyITEM = "d";
 	// Exit other modes, including inventory
-	static string keyCANCEL = "space";
+	public static string keyCANCEL = "space";
 
 	//The following two keys may belong somewhere else, I just wanted to set a framework
 	// Bring up Pause menu
-	static string keyPAUSE = "return";
+	public static string keyPAUSE = "return";
 	// Closes the program immediately, saving any states if neccesary
-	static string keyEXIT = "escape";
+	public static string keyEXIT = "escape";
 
 	// The amount of health the player has.
 	int health;
 	// The player's current level.
-	int level;
+	public int level;
 	// The amount of rupees that the player currently has.
 	int currency;
 	// The amount of experience the player has earned.
@@ -45,18 +45,24 @@ public class Player : UnitMovement {
 	// Action mode of the player [0 = idle, 1 = movement, 2 = attacking, 3 = midmanuever, 4 = turnless]
 	int state;
 	// Maximum amount of moves that an entity can make in one turn
-	double maxmoves;
+	public double maxmoves;
 	// Remaining turns. (Some actions take partial movess, negative moves results in skipped turns
 	double moves;
+
+	// variables to be adjusted by cursor check
+	static bool canWalk;
+	static bool canJump;
 
 	Animator animator;
 
 	BoardManager bm;
 
-	public int rows;
-	public int columns;
+//	public int rows;
+//	public int columns;
 
 	public GridAura gridSpot;
+
+	GridAura gridInstance;
 
 	// A string variable that we can change while playing the game or outside Play mode.
 	public string myName;
@@ -68,15 +74,17 @@ public class Player : UnitMovement {
 		experience = 0;
 		state = 0;
 		maxmoves = 1.0;
-		moves = 1.0;
+		moves = maxmoves;
 		myName = playerName;
+		canWalk = true;
+		canJump = true;
 	}
 
 	// Sets the borders for the player movement.
-	public void SetMoveLimits(int rows = 0, int columns = 0){
-		this.rows = rows;
-		this.columns = columns;
-	}
+//	public void SetMoveLimits(int rows = 0, int columns = 0){
+//		this.rows = rows;
+//		this.columns = columns;
+//	}
 
 	// Use this for initialization
 	void Start () {
@@ -84,35 +92,28 @@ public class Player : UnitMovement {
 
 		// Ititializes the player stats.
 		InitPlayer ();
-		SetMoveLimits (9,9);
+//		SetMoveLimits (9,9);
 	}
 
 	// Update is called once per frame
 	void Update () {
 
+		// Store position to prevent crazy additive movement
 		this.transform.position = this.transform.position;
 
-		// Transition states to prevent input overflow (probably temporary)
-		if (state == 11) {
-			state = 1;
-		}
-
-		int x = 0;
-		int y = 0;
-
 		// If all actions have been taken this turn, end the turn
-		if (moves <= 0){
+		if (moves < 0){
 			state = 4;
 		}
-
-		// debug turn incrementor, will be incremented by 1 everytime it is my turn again in final product
-		moves += 0.01;
 
 		// returns to active state if it is your turn
 		if (state == 4 & moves > 0) {
 			state = 0;
 		}
 
+		// debug turn incrementor, will be incremented by 1 everytime it is my turn again in final product
+		moves += 0.01;
+		
 		// Make sure moves are limited by maxmoves
 		if (moves > maxmoves) {
 
@@ -121,8 +122,12 @@ public class Player : UnitMovement {
 		}
 
 		// Checks for directional presses once, and converts them to ints
-		// (for future method usage)
+		// (for future method usage such as movement)
 
+		// Store the directional presses of the player
+		int x = 0;
+		int y = 0;
+		
 		// Exclusive up
 		if (Input.GetKey (keyUP) & ! Input.GetKey (keyDOWN)) {
 			y = 1;
@@ -140,17 +145,45 @@ public class Player : UnitMovement {
 			x = -1;
 		}
 
-		//Rotate the player sprite when appropriate
+		// ACTION STATES
+
+		// Movement Decision State
+		if (state == 1) {
+
+			// Creates Jump-Range Grids
+			gridInstance = Instantiate(gridSpot, new Vector3((this.transform.position.x + 2*x), (this.transform.position.y + 2*y), 0F), Quaternion.identity) as GridAura;
+
+			gridInstance.creator = this.transform.position;
+			
+			// Moves the player to the appropriate grid.
+			if (Input.GetKeyDown (keyMOVE)) {
+				walk (x,y,false);
+			}
+			// Jumps the player to the appropriate grid.
+			if (Input.GetKeyDown (keyATTACK)) {
+				jump (x,y);
+			}
+			
+		}
+
+		// All Active States
 		if (state < 3) {
 
 			// if it is your turn, and not in neutral state, show reticule
 			// Places the targetting icon
 			if (state > 0) {
 
-				Instantiate(gridSpot, new Vector3((this.transform.position.x + x), (this.transform.position.y + y), 0F), Quaternion.identity);
-			
+				gridInstance = Instantiate(gridSpot, new Vector3((this.transform.position.x + x), (this.transform.position.y + y), 0F), Quaternion.identity) as GridAura;
+
+				gridInstance.creator = this.transform.position;
+
 			}
 
+			// Returns the player to the neutral state.
+			if (Input.GetKeyDown (keyCANCEL)) {
+				state = 0;
+			}
+			
 			// Checks if facing purely left.
 			if ( (x == -1) & (y == 0) ) {
 				animator.Play ("PlayerLeftIdle");
@@ -186,24 +219,7 @@ public class Player : UnitMovement {
 			} 
 		}
 
-		// Movement Decision State
-		if (state == 1) {
-
-			// Moves the player to the appropriate grid.
-			if (Input.GetKeyDown (keyMOVE)) {
-				walk (x,y);
-			}
-			// Jumps the player to the appropriate grid.
-			if (Input.GetKeyDown (keyATTACK)) {
-				//jump
-			}
-
-			// Returns the player to the neutral state.
-			if (Input.GetKeyDown (keyCANCEL)) {
-				state = 0;
-			}
-
-		}
+		// Not My Turn State
 
 		if (state == 4) {
 
@@ -213,25 +229,31 @@ public class Player : UnitMovement {
 
 		// State Checks
 
-		// Check for move state
-		if (Input.GetKeyDown (keyMOVE)) {
-			state = 11;
+		if (state == 0) {
+
+			// Check for move state
+			if ((Input.GetKeyDown (keyMOVE))) {
+				state = 1;
+			}
+		
+			// Check for attack state NOT READY
+			//		if (Input.GetKeyDown (keyATTACK)) {
+			//			state = 2;
+			//		}
+		
+			//		// Check for item state NOT READY
+			//		if (Input.GetKeyDown (keyITEM)) {
+			//			state = 3;
+			//		}
 		}
-		
-		// Check for attack state NOT READY
-		//		if (Input.GetKeyDown (keyATTACK)) {
-		//			state = 12;
-		//		}
-		
-		//		// Check for item state NOT READY
-		//		if (Input.GetKeyDown (keyITEM)) {
-		//			state = 13;
-		//		}
+
+		canWalk = true;
+		canJump = true;
 
 	}
 
 	//moves the character occording to the inputs
-	void walk(int x, int y){
+	void walk(int x, int y,bool jump){
 
 		state = 3;
 
@@ -239,7 +261,11 @@ public class Player : UnitMovement {
 		Vector3 goal = new Vector3((this.transform.position.x + x),(this.transform.position.y + y), 0);
 
 		//check if goal is a valid location
-		if (Physics.CheckSphere (goal, 0.5F)) {
+		if (jump & ! canJump) {
+			//collision, do nothing
+			//play bump noise
+		}
+		if (! jump & ! canWalk) {
 			//collision, do nothing
 			//play bump noise
 		}
@@ -262,13 +288,26 @@ public class Player : UnitMovement {
 		x *= 2;
 		y *= 2;
 
-		walk (x, y);
+		walk (x, y, true);
 
 		if (this.transform.position != prepos) {
 
 			moves--;
 
 		}
+		
+	}
+
+	// Methods for GridAura to disable movement
+	public static void stopWalk(){
+
+		canWalk = false;
+
+	}
+
+	public static void stopJump(){
+		
+		canJump = false;
 		
 	}
 

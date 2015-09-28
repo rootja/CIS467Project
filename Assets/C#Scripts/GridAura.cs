@@ -11,6 +11,12 @@ public class GridAura : MonoBehaviour {
 
 	int timer;
 
+	float len;
+
+	Vector2 temp;
+	
+	public Vector2 creator;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -21,9 +27,31 @@ public class GridAura : MonoBehaviour {
 		//int dist = 1;
 		spritename = "SquareAuraStrip_strip4_2";
 
-		int timer = 10;
+		int timer = 5;
+
+		Vector2 temp = this.transform.position;
+
+		len = Vector2.Distance(temp,creator);
 
 		animator = GetComponent<Animator>();
+	}
+
+	void OnTriggerStay(Collider2D other){
+
+		if (other.tag == "Player") {
+			clr = 3;
+		}
+
+		if (other.tag == "Wall") {
+			clr = 0;
+			if(len > 1){
+				Player.stopJump();
+			}
+			else{
+				Player.stopWalk();
+			}
+		}
+
 	}
 	
 	// Update is called once per frame
@@ -34,16 +62,6 @@ public class GridAura : MonoBehaviour {
 		//}
 
 		//really sloppy here, don't yell at me yet
-
-		Vector3 check = new Vector3((this.transform.position.x),(this.transform.position.y),0F);
-
-		// Change color to red if a bad location
-		if(Physics.CheckSphere(check,0.5F)){
-			clr = 0;
-		}
-		else{
-			clr = 2;
-		}
 
 		// Change sprite to the appropriate color
 		spritename = "SquareAuraStrip_strip4_" + clr;
@@ -58,7 +76,7 @@ public class GridAura : MonoBehaviour {
 
 	void timeup () {
 
-		Destroy(this.gameObject, 0.1F);
+		Destroy(this.gameObject, 0.001F);
 
 	}
 }
