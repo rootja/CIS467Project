@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : UnitMovement {
+public class Player : Unit {
 
 	/*
 	 * Static Input Keys
@@ -95,35 +95,38 @@ public class Player : UnitMovement {
 //		SetMoveLimits (9,9);
 	}
 
-	// Update is called once per frame
-	void Update () {
+	public override GameObject[] Inventory(){
+		// Will be used to store user items.
+		return null;
+	}
 
+	public override void Move(){
 		// Store position to prevent crazy additive movement
 		this.transform.position = this.transform.position;
-
+		
 		// If all actions have been taken this turn, end the turn
 		if (moves < 0){
 			state = 4;
 		}
-
+		
 		// returns to active state if it is your turn
 		if (state == 4 & moves > 0) {
 			state = 0;
 		}
-
+		
 		// debug turn incrementor, will be incremented by 1 everytime it is my turn again in final product
 		moves += 0.01;
 		
 		// Make sure moves are limited by maxmoves
 		if (moves > maxmoves) {
-
+			
 			moves = maxmoves;
-
+			
 		}
-
+		
 		// Checks for directional presses once, and converts them to ints
 		// (for future method usage such as movement)
-
+		
 		// Store the directional presses of the player
 		int x = 0;
 		int y = 0;
@@ -144,15 +147,15 @@ public class Player : UnitMovement {
 		if (Input.GetKey (keyLEFT) & ! Input.GetKey (keyRIGHT)) {
 			x = -1;
 		}
-
+		
 		// ACTION STATES
-
+		
 		// Movement Decision State
 		if (state == 1) {
-
+			
 			// Creates Jump-Range Grids
 			gridInstance = Instantiate(gridSpot, new Vector3((this.transform.position.x + 2*x), (this.transform.position.y + 2*y), 0F), Quaternion.identity) as GridAura;
-
+			
 			gridInstance.creator = this.transform.position;
 			
 			// Moves the player to the appropriate grid.
@@ -165,20 +168,20 @@ public class Player : UnitMovement {
 			}
 			
 		}
-
+		
 		// All Active States
 		if (state < 3) {
-
+			
 			// if it is your turn, and not in neutral state, show reticule
 			// Places the targetting icon
 			if (state > 0) {
-
+				
 				gridInstance = Instantiate(gridSpot, new Vector3((this.transform.position.x + x), (this.transform.position.y + y), 0F), Quaternion.identity) as GridAura;
-
+				
 				gridInstance.creator = this.transform.position;
-
+				
 			}
-
+			
 			// Returns the player to the neutral state.
 			if (Input.GetKeyDown (keyCANCEL)) {
 				state = 0;
@@ -200,7 +203,7 @@ public class Player : UnitMovement {
 			if ( (x == 0) & (y == 1) ) {
 				animator.Play ("PlayerBackwardIdle");
 			}
-
+			
 			// Checks if facing up-left.
 			if ( (x == -1) & (y == 1) ) {
 				//animator.Play ("PlayerUpLeftIdle");
@@ -218,38 +221,43 @@ public class Player : UnitMovement {
 				//animator.Play ("PlayerDownRightIdle");
 			} 
 		}
-
+		
 		// Not My Turn State
-
+		
 		if (state == 4) {
-
+			
 			//not your turn cleanup
-
+			
 		}
-
+		
 		// State Checks
-
+		
 		if (state == 0) {
-
+			
 			// Check for move state
 			if ((Input.GetKeyDown (keyMOVE))) {
 				state = 1;
 			}
-		
+			
 			// Check for attack state NOT READY
 			//		if (Input.GetKeyDown (keyATTACK)) {
 			//			state = 2;
 			//		}
-		
+			
 			//		// Check for item state NOT READY
 			//		if (Input.GetKeyDown (keyITEM)) {
 			//			state = 3;
 			//		}
 		}
-
+		
 		canWalk = true;
 		canJump = true;
 
+	}
+
+	// Update is called once per frame
+	void Update () {
+		Move ();
 	}
 
 	//moves the character occording to the inputs
