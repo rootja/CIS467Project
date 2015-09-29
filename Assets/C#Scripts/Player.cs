@@ -105,7 +105,7 @@ public class Player : Unit {
 		this.transform.position = this.transform.position;
 		
 		// If all actions have been taken this turn, end the turn
-		if (moves < 0){
+		if (moves <= 0){
 			state = 4;
 		}
 		
@@ -168,7 +168,25 @@ public class Player : Unit {
 			}
 			// Skips the turn.
 			if (Input.GetKeyDown (keyITEM)) {
-				moves -= 3;
+				moves = 0;
+			}
+			
+		}
+
+		// Attack Decision State
+		if (state == 1) {
+			
+			// Activates item in slot 1
+			if (Input.GetKeyDown (keyMOVE)) {
+				// item use code
+			}
+			// Attacks the target grid with the main weapon (sword?)
+			if (Input.GetKeyDown (keyATTACK)) {
+				attack (x,y);
+			}
+			// Activates item in slot 2
+			if (Input.GetKeyDown (keyITEM)) {
+				// item use code
 			}
 			
 		}
@@ -307,6 +325,21 @@ public class Player : Unit {
 			moves--;
 
 		}
+		
+	}
+
+	// attacks the target area with the basic attack
+	void attack (int x, int y) {
+		
+		state = 3;
+		
+		// attack target location
+		Vector3 goal = new Vector3((this.transform.position.x + x),(this.transform.position.y + y), 0);
+
+
+		
+		state = 1;
+		return;
 		
 	}
 
