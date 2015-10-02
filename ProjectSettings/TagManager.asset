@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Wall
   - Effect
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - 
   - 
   - BlockingLayer
-  - 
+  - Items
   - 
   - 
   - 
@@ -42,6 +43,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Floor
+    uniqueID: 4167243905
+    locked: 0
+  - name: Items
+    uniqueID: 975244709
     locked: 0
   - name: Units
     uniqueID: 2881397337

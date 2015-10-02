@@ -1,10 +1,15 @@
-﻿using UnityEngine;
+using UnityEngine;
+using System;
 using System.Collections;
+using Random = UnityEngine.Random;
+using System.Collections.Generic;
 
 public class BoardManager : MonoBehaviour {
 
 	public GameObject floorTile;
 	public GameObject wallTile;
+
+	public GameObject[] items;
 
 	public int rows;
 	public int columns;
@@ -54,6 +59,42 @@ public class BoardManager : MonoBehaviour {
 				}
 			}
 		}
+
+		// May generate up to 5 items on the board.
+		GenerateItems (5);
+	}
+
+	// Generates an item and places it at some random position on the board. Note: The floor lining the wall
+	// will not have items in it. This is so that the player doesn't get blocked when we add obstacles.
+	public void GenerateItems(int numberOfItems){
+		// Holds the positions of each item added to the game board.
+		List<Vector3> positions = new List<Vector3> ();
+
+		// Adds items at random positions on the board.
+		for (int i = 0; i < numberOfItems; i++) {
+			// Values between 1 and 8.
+			float x = (int)(Random.value * (columns-2)+1);
+			// Values between 1 and 8.
+			float y = (int)(Random.value * (rows-2)+1);
+
+			// -1 for the z-axis allows the sprite to be displayed in front of the tile.
+			Vector3 location = new Vector3(x,y,-1);
+
+			if(positions.Contains(location) == false){
+				positions.Add(location);
+				Instantiate (RandomItem(), location, Quaternion.identity);
+			}
+		}
+	}
+
+	GameObject RandomItem(){
+		// Generates a random number between 0 and the size of the list of items.
+		int randomNum = (int) (Random.value * items.Length);
+
+		GameObject obj = items[randomNum];
+
+		return obj;
+
 	}
 	
 	// Update is called once per frame

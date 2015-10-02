@@ -54,6 +54,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floorTile: {fileID: 185736, guid: 70e2cd5ab958d4f38ba9aa0f87fa37ad, type: 2}
   wallTile: {fileID: 117544, guid: e8ce4e46c57a74905bbf59270f464a0d, type: 2}
+  items:
+  - {fileID: 140808, guid: a60f6bba7b45545eeb337ea8af3e19e0, type: 2}
+  - {fileID: 178486, guid: 9d6f330e07f3b4f08ade92e23ae55b5e, type: 2}
+  - {fileID: 122702, guid: df7552a20080a4f71923be53097a5762, type: 2}
+  - {fileID: 156034, guid: c39188568bb07438da21d7ca359821b3, type: 2}
   rows: 0
   columns: 0
 --- !u!1001 &100100000
@@ -63,6 +68,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: items.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: player
       value: 
@@ -79,6 +88,18 @@ Prefab:
       propertyPath: wallTile
       value: 
       objectReference: {fileID: 117544, guid: e8ce4e46c57a74905bbf59270f464a0d, type: 2}
+    - target: {fileID: 0}
+      propertyPath: key
+      value: 
+      objectReference: {fileID: 162894, guid: a60f6bba7b45545eeb337ea8af3e19e0, type: 2}
+    - target: {fileID: 0}
+      propertyPath: smallRupee
+      value: 
+      objectReference: {fileID: 140808, guid: a60f6bba7b45545eeb337ea8af3e19e0, type: 2}
+    - target: {fileID: 0}
+      propertyPath: mediumRupee
+      value: 
+      objectReference: {fileID: 178486, guid: 9d6f330e07f3b4f08ade92e23ae55b5e, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 153900}
