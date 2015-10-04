@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 3e4bd1e61f22b421b8b8f63868c9f7c2
-timeCreated: 1443778286
+timeCreated: 1443918276
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -8,6 +8,8 @@ TextureImporter:
     21300002: ZeldaitemsPlusPickaxes_1
     21300004: ZeldaitemsPlusPickaxes_2
     21300006: ZeldaitemsPlusPickaxes_3
+    21300008: ZeldaitemsPlusPickaxes_4
+    21300010: ZeldaitemsPlusPickaxes_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -91,6 +93,26 @@ TextureImporter:
         y: 755
         width: 54
         height: 54
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ZeldaitemsPlusPickaxes_4
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 820
+        width: 59
+        height: 84
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ZeldaitemsPlusPickaxes_5
+      rect:
+        serializedVersion: 2
+        x: 831
+        y: 975
+        width: 59
+        height: 78
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}

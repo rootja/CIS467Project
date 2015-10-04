@@ -266,7 +266,7 @@ public class Player : Unit {
 		state = 3;
 
 		//place to go
-		Vector3 goal = new Vector3((this.transform.position.x + x),(this.transform.position.y + y), 0);
+		Vector3 destination = new Vector3((this.transform.position.x + x),(this.transform.position.y + y), 0);
 
 		//check if goal is a valid location
 		if (jump & ! canJump) {
@@ -279,7 +279,7 @@ public class Player : Unit {
 		}
 		//valid location, move to goal
 		else {
-			this.transform.position = goal;
+			this.transform.position = destination;
 			moves--;
 		}
 
