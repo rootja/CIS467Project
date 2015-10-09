@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject player;
 	public GameObject cynthia;
     public BoardManager boardScript;
-    private int level = 10;
+    private int level = 1;
 
     //public static GameManager instance = null;
 
@@ -24,8 +24,22 @@ public class GameManager : MonoBehaviour {
 		Instantiate (cynthia);
 
         boardScript = GetComponent<BoardManager>();
+        Init();
+	}
+
+    //Called each time a level was loaded
+    void OnLevelWasLoaded(int index)
+    {
+        //Add one to our level number.
+        level++;
+        //Call Init to initialize the level.
+        Init();
+    }
+
+    void Init()
+    {
         boardScript.LevelSelector(level);
-	} 
+    }
 	
 	// Update is called once per frame
 	void Update () {
