@@ -34,25 +34,6 @@ public class Player : Unit {
 	// Closes the program immediately, saving any states if neccesary
 	public static string keyEXIT = "escape";
 
-	// The amount of health the player has.
-	int health;
-	// The player's current level.
-	public int level;
-	// The amount of rupees that the player currently has.
-	int currency;
-	// The amount of experience the player has earned.
-	int experience;
-	// Action mode of the player [0 = idle, 1 = movement, 2 = attacking, 3 = midmanuever, 4 = turnless]
-	int state;
-	// Maximum amount of moves that an entity can make in one turn
-	public double maxmoves;
-	// Remaining turns. (Some actions take partial movess, negative moves results in skipped turns
-	double moves;
-
-	// variables to be adjusted by cursor check
-	static bool canWalk;
-	static bool canJump;
-
 	Animator animator;
 
 	BoardManager bm;
@@ -104,26 +85,6 @@ public class Player : Unit {
 		// Store position to prevent crazy additive movement
 		this.transform.position = this.transform.position;
 		
-		// If all actions have been taken this turn, end the turn
-		if (moves <= 0){
-			state = 4;
-		}
-		
-		// returns to active state if it is your turn
-		if (state == 4 & moves > 0) {
-			state = 0;
-		}
-		
-		// debug turn incrementor, will be incremented by 1 everytime it is my turn again in final product
-		moves += 0.01;
-		
-		// Make sure moves are limited by maxmoves
-		if (moves > maxmoves) {
-			
-			moves = maxmoves;
-			
-		}
-		
 		// Checks for directional presses once, and converts them to ints
 		// (for future method usage such as movement)
 		
@@ -174,7 +135,7 @@ public class Player : Unit {
 		}
 
 		// Attack Decision State
-		if (state == 1) {
+		if (state == 2) {
 			
 			// Activates item in slot 1
 			if (Input.GetKeyDown (keyMOVE)) {
@@ -279,6 +240,7 @@ public class Player : Unit {
 
 	// Update is called once per frame
 	void Update () {
+		base.Update ();
 		Move ();
 	}
 
@@ -344,16 +306,16 @@ public class Player : Unit {
 	}
 
 	// Methods for GridAura to disable movement
-	public static void stopWalk(){
+//	public void stopWalk(){
 
-		canWalk = false;
+//		canWalk = false;
 
-	}
+//	}
 
-	public static void stopJump(){
+//	public void stopJump(){
 		
-		canJump = false;
+//		canJump = false;
 		
-	}
+//	}
 
 }

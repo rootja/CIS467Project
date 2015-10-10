@@ -45,10 +45,10 @@ public class GridAura : MonoBehaviour {
 		if (other.tag == "Wall") {
 			clr = 0;
 			if(len > 1){
-				Player.stopJump();
+//				Player.stopJump();
 			}
 			else{
-				Player.stopWalk();
+//				Player.stopWalk();
 			}
 		}
 
