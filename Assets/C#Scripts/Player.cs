@@ -93,19 +93,19 @@ public class Player : Unit {
 		int y = 0;
 		
 		// Exclusive up
-		if (Input.GetKey (keyUP) & ! Input.GetKey (keyDOWN)) {
+		if (PauseScript.isKeysEnabled && Input.GetKey (keyUP) & ! Input.GetKey (keyDOWN)) {
 			y = 1;
 		}
 		// Exclusive down
-		if (Input.GetKey (keyDOWN) & ! Input.GetKey (keyUP)) {
+		if (PauseScript.isKeysEnabled && Input.GetKey (keyDOWN) & ! Input.GetKey (keyUP)) {
 			y = -1;
 		}
 		// Exclusive right
-		if (Input.GetKey (keyRIGHT) & ! Input.GetKey (keyLEFT)) {
+		if (PauseScript.isKeysEnabled && Input.GetKey (keyRIGHT) & ! Input.GetKey (keyLEFT)) {
 			x = 1;
 		}
 		// Exclusive left
-		if (Input.GetKey (keyLEFT) & ! Input.GetKey (keyRIGHT)) {
+		if (PauseScript.isKeysEnabled && Input.GetKey (keyLEFT) & ! Input.GetKey (keyRIGHT)) {
 			x = -1;
 		}
 		
@@ -120,15 +120,15 @@ public class Player : Unit {
 			gridInstance.creator = this.transform.position;
 			
 			// Moves the player to the appropriate grid.
-			if (Input.GetKeyDown (keyMOVE)) {
+			if (PauseScript.isKeysEnabled && Input.GetKeyDown (keyMOVE)) {
 				walk (x,y,false);
 			}
 			// Jumps the player to the appropriate grid.
-			if (Input.GetKeyDown (keyATTACK)) {
+			if (PauseScript.isKeysEnabled && Input.GetKeyDown (keyATTACK)) {
 				jump (x,y);
 			}
 			// Skips the turn.
-			if (Input.GetKeyDown (keyITEM)) {
+			if (PauseScript.isKeysEnabled && Input.GetKeyDown (keyCANCEL)) {
 				moves = 0;
 			}
 			
@@ -218,7 +218,7 @@ public class Player : Unit {
 		if (state == 0) {
 			
 			// Check for move state
-			if ((Input.GetKeyDown (keyMOVE))) {
+			if ((PauseScript.isKeysEnabled && Input.GetKeyDown (keyMOVE))) {
 				state = 1;
 			}
 			
