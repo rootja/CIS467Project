@@ -182,7 +182,7 @@ public class Player : Unit {
 			}
 			// Attacks the target grid with the main weapon (sword?)
 			if (Input.GetKeyDown (keyATTACK)) {
-				attack (x,y);
+				Attack(x,y);
 			}
 			// Activates item in slot 2
 			if (Input.GetKeyDown (keyITEM)) {
@@ -329,7 +329,7 @@ public class Player : Unit {
 	}
 
 	// attacks the target area with the basic attack
-	void attack (int x, int y) {
+	public override void Attack (int x, int y) {
 		
 		state = 3;
 		

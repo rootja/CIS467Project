@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Cynthia : UnitMovement {
+public class Cynthia : Unit {
 
 // The amount of health the player has.
 	int health;
@@ -24,7 +24,7 @@ public class Cynthia : UnitMovement {
 	// A string variable that we can change while playing the game or outside Play mode.
 	public string myName;
 
-	public void InitPlayer(string playerName = "Lonk"){
+	public void InitEnemy(string playerName = "Cynthia"){
 		health = 3;
 		level = 1;
 		currency = 0;
@@ -40,7 +40,7 @@ public class Cynthia : UnitMovement {
 
 	private Vector3 goNorth(Vector3 currentPosition) {
 		currentPosition.y++;		
-		animator.Play ("cynthia_");
+		//animator.Play ("cynthia_");
 		if(currentPosition.y == columns - 1){
 			//If you can't go north, choose a random direction and check if you can go that way
 			switch (Random.Range(0,2)){
@@ -164,38 +164,14 @@ public class Cynthia : UnitMovement {
 		animator = GetComponent<Animator> ();
 
 		// Ititializes the player stats.
-		InitPlayer ();
+		InitEnemy();
 		this.transform.position = new Vector3(2,3,0);
 		SetMoveLimits (9,9);
 	}
 
-	// Update is called once per frame
-	void Update () {
+	public override void Move(){
 		Vector3 currentPosition = this.transform.position;
-
-		// Checks if the player presses down the left arrow key and that they haven't reached the left border.
-		/*if (Input.GetKeyDown (KeyCode.LeftArrow) && currentPosition.x != 0) {
-			currentPosition.x--;
-			animator.Play("cynthia_west");
-		} 
-		// Checks if the player presses down the right arrow key and that they haven't reached the right border.
-		if (Input.GetKeyDown (KeyCode.RightArrow) && currentPosition.x < rows - 1) {
-			currentPosition.x++;
-			animator.Play("cynthia_east");
-		}
-		// Checks if the player presses down the down arrow key and that they haven't reached the bottom.
-		if (Input.GetKeyDown (KeyCode.DownArrow) && currentPosition.y != 0) {
-			currentPosition.y--;
-			animator.Play("cynthia_south");
-		} 
-		// Checks if the player presses down the up arrow key and that they haven't reached the top.
-		if (Input.GetKeyDown (KeyCode.UpArrow) && currentPosition.y < columns - 1) {
-			currentPosition.y++;
-			animator.Play ("cynthia_north");
-		}
-		*/
 		// Updates the object's position to the new position.
-
 		if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)){
 			switch(currentDirection) {
 				case "south":
@@ -214,5 +190,29 @@ public class Cynthia : UnitMovement {
 		}
 
 		this.transform.position = currentPosition;
+	}
+
+	public override GameObject[] Inventory(){
+		return null;
+	}
+
+	public override void Attack(int x, int y){
+		//Facing north
+		if(x < 0 && y < 0)
+			animator.Play ("garchomp_");
+		//Facing West
+		else if(x > 0 && y < 0)
+			animator.Play ("garchomp_ 2");
+		//Facing East
+		else if(x > 0 && y > 0)
+			animator.Play ("garchomp_1");
+		//Facing south
+		else if(x < 0 && y > 0)
+		animator.Play ("garchomp_ 1");
+	}
+
+	// Update is called once per frame
+	void Update () {
+		Move();
 	}
 }

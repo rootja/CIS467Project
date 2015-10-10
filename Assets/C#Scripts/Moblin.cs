@@ -97,6 +97,10 @@ public class Moblin : Unit {
 		return null;
 	}
 
+	public override void Attack(int x, int y){
+		
+	}
+
 	// Update is called once per frame
 	void Update () {
 		Move ();

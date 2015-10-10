@@ -9,6 +9,9 @@ public abstract class Unit : MonoBehaviour {
 	// Every unit must have an inventory.
 	public abstract GameObject[] Inventory ();
 
+	//Every unit should attack
+	public abstract void Attack(int x, int y);
+
 	// Use this for initialization
 	void Start () {
 	
