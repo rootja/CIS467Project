@@ -100,7 +100,6 @@ public class Moblin : Unit {
 	public override void Attack(int x, int y){
 		
 	}
-
 	// Update is called once per frame
 	void Update () {
 		Move ();

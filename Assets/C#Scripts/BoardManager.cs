@@ -64,7 +64,7 @@ public class BoardManager : MonoBehaviour {
 		}
 
 		// Adds a ladder right corner of the moveable section of the board.
-		Instantiate (ladder, new Vector3 (rows-1, columns-1, -1), Quaternion.identity);
+		Instantiate (ladder, new Vector3 (rows-1, columns-1, 0), Quaternion.identity);
 
 		// May generate items up to the specified number and place them on the board.
 		GenerateItems (10);
@@ -87,7 +87,7 @@ public class BoardManager : MonoBehaviour {
 			float y = (int)(Random.value * (columns-2)+1);
 
 			// -1 for the z-axis allows the sprite to be displayed in front of the tile.
-			Vector3 location = new Vector3(x,y,-1);
+			Vector3 location = new Vector3(x,y,0);
 
 			// Checks if the random position hasn't been added already.
 			if(positions.Contains(location) == false){

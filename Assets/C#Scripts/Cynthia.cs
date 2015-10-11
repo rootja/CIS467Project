@@ -24,12 +24,23 @@ public class Cynthia : Unit {
 	// A string variable that we can change while playing the game or outside Play mode.
 	public string myName;
 
-	public void InitEnemy(string playerName = "Cynthia"){
-		health = 3;
-		level = 1;
-		currency = 0;
-		experience = 0;
-		myName = playerName;
+	public void InitEnemy(string unitName = "Cynthia"){
+		health = 5;
+		level = 3;
+		currency = 10;
+		experience = 50;
+		myName = unitName;
+		state = 0;
+		maxmoves = 1.0;
+		moves = maxmoves;
+
+		canWalk = true;
+		canJump = true;
+	}
+
+	public override GameObject[] Inventory(){
+		// Will be used to store user items.
+		return null;
 	}
 
 	// Sets the borders for the player movement.
@@ -210,6 +221,7 @@ public class Cynthia : Unit {
 
 	// Update is called once per frame
 	void Update () {
+		base.Update ();
 		int moveOrAttack = Random.Range(0,2);
 		if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)){
 			if(moveOrAttack == 1){
