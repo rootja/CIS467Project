@@ -40,7 +40,7 @@ public class Cynthia : Unit {
 
 	private Vector3 goNorth(Vector3 currentPosition) {
 		currentPosition.y++;		
-		//animator.Play ("cynthia_");
+		animator.Play ("cynthia_");
 		if(currentPosition.y == columns - 1){
 			//If you can't go north, choose a random direction and check if you can go that way
 			switch (Random.Range(0,2)){
@@ -172,23 +172,20 @@ public class Cynthia : Unit {
 	public override void Move(){
 		Vector3 currentPosition = this.transform.position;
 		// Updates the object's position to the new position.
-		if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)){
-			switch(currentDirection) {
-				case "south":
-					currentPosition = goSouth(currentPosition);
-					break;
-				case "north":
-					currentPosition = goNorth(currentPosition);
-					break;
-				case "west":
-					currentPosition = goWest(currentPosition);
-					break;
-				default:
-					currentPosition = goEast(currentPosition);
-					break;
-			}
+		switch(currentDirection) {
+			case "south":
+				currentPosition = goSouth(currentPosition);
+				break;
+			case "north":
+				currentPosition = goNorth(currentPosition);
+				break;
+			case "west":
+				currentPosition = goWest(currentPosition);
+				break;
+			default:
+				currentPosition = goEast(currentPosition);
+				break;
 		}
-
 		this.transform.position = currentPosition;
 	}
 
@@ -213,6 +210,27 @@ public class Cynthia : Unit {
 
 	// Update is called once per frame
 	void Update () {
-		Move();
+		int moveOrAttack = Random.Range(0,2);
+		if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)){
+			if(moveOrAttack == 1){
+				Move();
+			}
+			else {
+				switch(currentDirection) {
+					case "south":
+						Attack(-1,1);
+						break;
+					case "north":
+						Attack(-1,-1);
+						break;
+					case "west":
+						Attack(1,-1);
+						break;
+					default:
+						Attack(1,1);
+						break;
+				}
+			}
+		}
 	}
 }
