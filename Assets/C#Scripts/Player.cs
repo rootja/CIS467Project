@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class Player : Unit {
 
@@ -34,6 +35,9 @@ public class Player : Unit {
 	// Closes the program immediately, saving any states if neccesary
 	public static string keyEXIT = "escape";
 
+	// The initial amount of experience needed to level up.
+	const int EXPERIENCE_FACTOR = 10;
+
 	Animator animator;
 
 	BoardManager bm;
@@ -48,13 +52,28 @@ public class Player : Unit {
 	// A string variable that we can change while playing the game or outside Play mode.
 	public string myName;
 
+	int playerLevel;
+	int playerHealth;
+	int playerAttack;
+	int playerDefence;
+	int playerSpeed;
+
+	public int[] stats;
+
 	public void InitPlayer(string playerName = "Link"){
-		health = 3;
-		level = 1;
-		currency = 0;
-		experience = 0;
+		this.Level = 1;
+		this.Health = 3;
+		this.Attack = 1;
+		this.Defence = 1;
+		this.Speed = 1;
+		this.Experience = 0;
+		this.Currency = 0;
+
+		stats = new int { Health, Attack, Defence, Speed };
+
 		state = 0;
 		maxmoves = 1.0;
+
 		moves = maxmoves;
 		myName = playerName;
 		canWalk = true;
@@ -318,4 +337,40 @@ public class Player : Unit {
 		
 //	}
 
+	// Randomizes the stat bonuses when leveling.
+	void RandomizeStatBonuses(){
+		// A maximum of 3 stats bonuses can occur when leveling.
+		int maxBonuses = 3;
+
+		int index;
+		for(int i = 0; i < maxBonuses; i++){
+			// Randomizes the stat that will be increased.
+			index = (int) (Random.value * stats.Length);
+			// Increases the stat at the generated index by 1.
+			stats[index]++;
+		}
+	}
+
+	// Updates the player's level and stats.
+	void LevelUp(){
+		// Increases the player's level by 1.
+		this.Level++;
+		// Increases the player's stats.
+		RandomizeStatBonuses ();
+	}
+
+	public void DefeatEnemy(Unit enemy){
+		// Figures out how much experience is required for the player to level up.
+		int nextLevel = (int) Mathf.Pow (this.Level, 2) * EXPERIENCE_FACTOR;
+
+		// If the player still needs experience after defeating the enemy, then simply update
+		// the player's experience.
+		if ((this.Experience + enemy.Experience) > nextLevel) {
+			this.Experience += enemy.Experience;
+		} else {
+			// Else, add the experience and increment the player's level.
+			this.Experience += enemy.Experience;
+			LevelUp();
+		}
+	}
 }

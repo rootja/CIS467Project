@@ -2,15 +2,7 @@
 using System.Collections;
 
 public abstract class Unit : MonoBehaviour {
-
-	// The amount of health the unit has.
-	int hp;
-	// The unit's current level.
-	int lvl;
-	// The amount of rupees that the unit currently has.
-	int money;
-	// The amount of experience the unit has(/will give?).
-	int exp;
+	
 	// Action mode of the unit [0 = idle, 1 = movement, 2 = attacking, 3 = midmanuever, 4 = turnless]
 	int stat;
 	// Maximum amount of moves that an entity can make in one turn
@@ -22,33 +14,19 @@ public abstract class Unit : MonoBehaviour {
 	bool walk;
 	bool jump;
 
-	// Health Property
-	public int health
-	{
-		get { return hp; }
-		set { hp = value; }
-	}
+	public int Level { get; set; }
 
-	// Currency Property
-	public int currency
-	{
-		get { return money; }
-		set { money = value; }
-	}
+	public int Health { get; set; }
 
-	// Experience Property
-	public int experience
-	{
-		get { return exp; }
-		set { exp = value; }
-	}
+	public int Attack { get; set; }
 
-	// Experience Property
-	public int level
-	{
-		get { return lvl; }
-		set { lvl = value; }
-	}
+	public int Defence { get; set; }
+
+	public int Speed { get; set; }
+
+	public int Experience { get; set; }
+
+	public int Currency { get; set; }
 
 	// State Property
 	public int state
@@ -114,10 +92,7 @@ public abstract class Unit : MonoBehaviour {
 		
 		// Make sure moves are limited by maxmoves
 		if (moves > maxmoves) {
-			
-			moves = maxmoves;
-			
+			moves = maxmoves;	
 		}
-	
 	}
 }
