@@ -17,6 +17,8 @@ public class Cynthia : Unit {
 	// A string variable that we can change while playing the game or outside Play mode.
 	public string myName;
 
+	public static Vector3 currentPosition;
+
 	public void InitPlayer(string unitName = "Cynthia"){
 		this.Level = 3;
 		this.Health = 5;
@@ -42,7 +44,7 @@ public class Cynthia : Unit {
 	}
 
 	private Vector3 goNorth(Vector3 currentPosition) {
-		currentPosition.y++;		
+		currentPosition.y++;
 		animator.Play ("cynthia_");
 		if(currentPosition.y == columns - 1){
 			//If you can't go north, choose a random direction and check if you can go that way
@@ -162,14 +164,55 @@ public class Cynthia : Unit {
 		return currentPosition;
 	}
 
+	private void collisionHandler(Vector3 otherCharacterPosition){
+		float xPlus1 = currentPosition.x + (float)1.0;
+		float xMinus1 = currentPosition.x - (float)1.0;
+		float yPlus1 = currentPosition.y + (float)1.0;
+		float yMinus1 = currentPosition.y - (float)1.0;
+		Debug.Log(otherCharacterPosition);
+		Debug.Log(currentPosition);
+		switch(currentDirection) {
+			case "south":
+				if(otherCharacterPosition.x != currentPosition.x || otherCharacterPosition.y != yMinus1)
+					currentPosition = goSouth(currentPosition);
+				moves--;
+		Debug.Log(yMinus1);
+				break;
+			case "north":
+				if(otherCharacterPosition.x != currentPosition.x || otherCharacterPosition.y != yPlus1)
+					currentPosition = goNorth(currentPosition);
+				moves--;
+		Debug.Log(yPlus1);
+				break;
+			case "west":
+				if(otherCharacterPosition.x != xMinus1 || otherCharacterPosition.y != currentPosition.y)
+					currentPosition = goWest(currentPosition);
+				moves--;
+		Debug.Log(xMinus1);
+				break;
+			default:
+				if(otherCharacterPosition.x != xPlus1  || otherCharacterPosition.y != currentPosition.y)
+					currentPosition = goEast(currentPosition);
+				moves--;
+		Debug.Log(xPlus1);
+				break;
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		animator = GetComponent<Animator> ();
 
 		// Ititializes the player stats.
 		InitPlayer ();
-		//this.transform.position = new Vector3(2,3,0);
-		SetMoveLimits (9,9);
+		int xPos = 0;
+		int yPos = 0;
+		SetMoveLimits (9,15);
+		while(xPos == 0 && yPos == 0){
+			xPos = Random.Range(0,rows);
+			yPos = Random.Range(0,columns);
+		}
+		this.transform.position = new Vector3(xPos,yPos,0);
 	}
 
 	// Update is called once per frame
@@ -180,67 +223,9 @@ public class Cynthia : Unit {
 
 	//sub function'd for inheritence compatibility
 	public override void Move () {
-		Vector3 currentPosition = this.transform.position;
-
-		// Checks if the player presses down the left arrow key and that they haven't reached the left border.
-		/*if (Input.GetKeyDown (KeyCode.LeftArrow) && currentPosition.x != 0) {
-			currentPosition.x--;
-			animator.Play("cynthia_west");
-		} 
-		// Checks if the player presses down the right arrow key and that they haven't reached the right border.
-		if (Input.GetKeyDown (KeyCode.RightArrow) && currentPosition.x < rows - 1) {
-			currentPosition.x++;
-			animator.Play("cynthia_east");
-		}
-		// Checks if the player presses down the down arrow key and that they haven't reached the bottom.
-		if (Input.GetKeyDown (KeyCode.DownArrow) && currentPosition.y != 0) {
-			currentPosition.y--;
-			animator.Play("cynthia_south");
-		} 
-		// Checks if the player presses down the up arrow key and that they haven't reached the top.
-		if (Input.GetKeyDown (KeyCode.UpArrow) && currentPosition.y < columns - 1) {
-			currentPosition.y++;
-			animator.Play ("cynthia_north");
-		}
-		*/
-		// Updates the object's position to the new position.
-
-//		if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)){
-//			switch(currentDirection) {
-//				case "south":
-//					currentPosition = goSouth(currentPosition);
-//					break;
-//				case "north":
-//					currentPosition = goNorth(currentPosition);
-//					break;
-//				case "west":
-//					currentPosition = goWest(currentPosition);
-//					break;
-//				default:
-//					currentPosition = goEast(currentPosition);
-//					break;
-//			}
-//		}
-
+		currentPosition = this.transform.position;
 		if(state < 4){
-			switch(currentDirection) {
-			case "south":
-				currentPosition = goSouth(currentPosition);
-				moves--;
-				break;
-			case "north":
-				currentPosition = goNorth(currentPosition);
-				moves--;
-				break;
-			case "west":
-				currentPosition = goWest(currentPosition);
-				moves--;
-				break;
-			default:
-				currentPosition = goEast(currentPosition);
-				moves--;
-				break;
-			}
+			collisionHandler(Player.currentPosition);
 		}
 
 		this.transform.position = currentPosition;

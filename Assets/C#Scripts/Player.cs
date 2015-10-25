@@ -89,6 +89,8 @@ public class Player : Unit {
 		currency = pCurrency;
 	}
 
+	public static Vector3 currentPosition;
+
 	public void InitPlayer(string playerName = "Link"){
 		myName = playerName;
 
@@ -327,6 +329,7 @@ public class Player : Unit {
 		base.Update ();
 		Move ();
 //		CanMove (Input.GetKey(KeyCode.D));
+		currentPosition = this.transform.position;
 	}
 
 	//moves the character occording to the inputs
