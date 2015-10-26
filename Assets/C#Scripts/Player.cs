@@ -35,11 +35,11 @@ public class Player : Unit {
 	public static KeyCode keyEXIT = KeyCode.Return;
 
 	// The amount of health the player has.
-	int health;
+	public static int health;
 	// The player's current level.
-	public int level;
+	public static int level;
 	// The amount of rupees that the player currently has.
-	int currency;
+	public static int currency;
 	// The amount of experience the player has earned.
 	int experience;
 	// Action mode of the player [0 = idle, 1 = movement, 2 = attacking, 3 = midmanuever, 4 = turnless]
