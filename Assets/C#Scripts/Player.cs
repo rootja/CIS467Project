@@ -34,25 +34,6 @@ public class Player : Unit {
 	// Closes the program immediately, saving any states if neccesary
 	public static string keyEXIT = "escape";
 
-	// The amount of health the player has.
-	int health;
-	// The player's current level.
-	public int level;
-	// The amount of rupees that the player currently has.
-	int currency;
-	// The amount of experience the player has earned.
-	int experience;
-	// Action mode of the player [0 = idle, 1 = movement, 2 = attacking, 3 = midmanuever, 4 = turnless]
-	int state;
-	// Maximum amount of moves that an entity can make in one turn
-	public double maxmoves;
-	// Remaining turns. (Some actions take partial movess, negative moves results in skipped turns
-	double moves;
-
-	// variables to be adjusted by cursor check
-	static bool canWalk;
-	static bool canJump;
-
 	Animator animator;
 
 	BoardManager bm;
@@ -104,26 +85,6 @@ public class Player : Unit {
 		// Store position to prevent crazy additive movement
 		this.transform.position = this.transform.position;
 		
-		// If all actions have been taken this turn, end the turn
-		if (moves < 0){
-			state = 4;
-		}
-		
-		// returns to active state if it is your turn
-		if (state == 4 & moves > 0) {
-			state = 0;
-		}
-		
-		// debug turn incrementor, will be incremented by 1 everytime it is my turn again in final product
-		moves += 0.01;
-		
-		// Make sure moves are limited by maxmoves
-		if (moves > maxmoves) {
-			
-			moves = maxmoves;
-			
-		}
-		
 		// Checks for directional presses once, and converts them to ints
 		// (for future method usage such as movement)
 		
@@ -132,19 +93,19 @@ public class Player : Unit {
 		int y = 0;
 		
 		// Exclusive up
-		if (Input.GetKey (keyUP) & ! Input.GetKey (keyDOWN)) {
+		if (PauseScript.isKeysEnabled && Input.GetKey (keyUP) & ! Input.GetKey (keyDOWN)) {
 			y = 1;
 		}
 		// Exclusive down
-		if (Input.GetKey (keyDOWN) & ! Input.GetKey (keyUP)) {
+		if (PauseScript.isKeysEnabled && Input.GetKey (keyDOWN) & ! Input.GetKey (keyUP)) {
 			y = -1;
 		}
 		// Exclusive right
-		if (Input.GetKey (keyRIGHT) & ! Input.GetKey (keyLEFT)) {
+		if (PauseScript.isKeysEnabled && Input.GetKey (keyRIGHT) & ! Input.GetKey (keyLEFT)) {
 			x = 1;
 		}
 		// Exclusive left
-		if (Input.GetKey (keyLEFT) & ! Input.GetKey (keyRIGHT)) {
+		if (PauseScript.isKeysEnabled && Input.GetKey (keyLEFT) & ! Input.GetKey (keyRIGHT)) {
 			x = -1;
 		}
 		
@@ -159,12 +120,34 @@ public class Player : Unit {
 			gridInstance.creator = this.transform.position;
 			
 			// Moves the player to the appropriate grid.
-			if (Input.GetKeyDown (keyMOVE)) {
+			if (PauseScript.isKeysEnabled && Input.GetKeyDown (keyMOVE)) {
 				walk (x,y,false);
 			}
 			// Jumps the player to the appropriate grid.
-			if (Input.GetKeyDown (keyATTACK)) {
+			if (PauseScript.isKeysEnabled && Input.GetKeyDown (keyATTACK)) {
 				jump (x,y);
+			}
+			// Skips the turn.
+			if (PauseScript.isKeysEnabled && Input.GetKeyDown (keyCANCEL)) {
+				moves = 0;
+			}
+			
+		}
+
+		// Attack Decision State
+		if (state == 2) {
+			
+			// Activates item in slot 1
+			if (Input.GetKeyDown (keyMOVE)) {
+				// item use code
+			}
+			// Attacks the target grid with the main weapon (sword?)
+			if (Input.GetKeyDown (keyATTACK)) {
+				attack (x,y);
+			}
+			// Activates item in slot 2
+			if (Input.GetKeyDown (keyITEM)) {
+				// item use code
 			}
 			
 		}
@@ -235,7 +218,7 @@ public class Player : Unit {
 		if (state == 0) {
 			
 			// Check for move state
-			if ((Input.GetKeyDown (keyMOVE))) {
+			if ((PauseScript.isKeysEnabled && Input.GetKeyDown (keyMOVE))) {
 				state = 1;
 			}
 			
@@ -257,6 +240,7 @@ public class Player : Unit {
 
 	// Update is called once per frame
 	void Update () {
+		base.Update ();
 		Move ();
 	}
 
@@ -306,17 +290,49 @@ public class Player : Unit {
 		
 	}
 
-	// Methods for GridAura to disable movement
-	public static void stopWalk(){
+	// attacks the target area with the basic attack
+	void attack (int x, int y) {
+		
+		state = 3;
+		
+		// attack target location
+		Vector3 goal = new Vector3((this.transform.position.x + x),(this.transform.position.y + y), 0);
 
-		canWalk = false;
 
+		
+		state = 1;
+		return;
+		
 	}
 
-	public static void stopJump(){
-		
-		canJump = false;
-		
-	}
+    //Checks if the object has collided with the ladded and restarts the level if it has
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        //Check if the tag of the trigger collided with is Exit.
+        if (other.tag == "Exit")
+        {
+            //Invoke the Restart function to start the next level with a delay of 1 second.
+            Invoke("Restart", 0);
+        }
+    }
+
+    //Restart reloads the scene when called.
+    private void Restart()
+    {
+        Application.LoadLevel(Application.loadedLevel);
+    }
+
+    // Methods for GridAura to disable movement
+    //	public void stopWalk(){
+
+    //		canWalk = false;
+
+    //	}
+
+    //	public void stopJump(){
+
+    //		canJump = false;
+
+    //	}
 
 }

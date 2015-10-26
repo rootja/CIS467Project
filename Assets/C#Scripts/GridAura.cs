@@ -36,27 +36,7 @@ public class GridAura : MonoBehaviour {
 		animator = GetComponent<Animator>();
 	}
 
-    //*Added by Ryan to check for exit*
-    //Checks if the object has collided with the ladded and restarts the level if it has
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        //Check if the tag of the trigger collided with is Exit.
-        if (other.tag == "Exit")
-        {
-            //Invoke the Restart function to start the next level with a delay of 1 second.
-            Invoke("Restart", 1);
-        }
-    }
-
-    //*Added by Ryan to reload the level once the player collides with the ladder*
-    //Restart reloads the scene when called.
-    private void Restart()
-    {
-        //Load the last scene loaded, in this case Main, the only scene in the game.
-        Application.LoadLevel(Application.loadedLevel);
-    }
-
-    /*void OnTriggerStay(Collider2D other){
+	void OnTriggerStay(Collider2D other){
 
 		if (other.tag == "Player") {
 			clr = 3;
@@ -65,14 +45,14 @@ public class GridAura : MonoBehaviour {
 		if (other.tag == "Wall") {
 			clr = 0;
 			if(len > 1){
-				Player.stopJump();
+//				Player.stopJump();
 			}
 			else{
-				Player.stopWalk();
+//				Player.stopWalk();
 			}
 		}
 
-	}*/
+	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -94,7 +74,7 @@ public class GridAura : MonoBehaviour {
 		}
 	}
 
-	void timeup () {
+    void timeup () {
 
 		Destroy(this.gameObject, 0.001F);
 

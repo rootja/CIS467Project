@@ -8,27 +8,35 @@ public class GameManager : MonoBehaviour {
     public BoardManager boardScript;
     private int level = 1;
 
-    //public static GameManager instance = null;
+    public static GameManager instance = null;
 
-	// Use this for initialization
-	void Start () {
-
-    //    if (instance == null)
-    //        instance = this;
-    //    else if (instance != this)
-    //        Destroy(gameObject);
-
-    //    DontDestroyOnLoad(gameObject);
-
+    // Use this for initialization
+    void Start () {
 		Instantiate (player);
 		Instantiate (cynthia);
 
+        //Check if instance already exists
+        if (instance == null)
+
+            //if not, set instance to this
+            instance = this;
+
+        //If instance already exists and it's not this:
+        else if (instance != this)
+
+            //Then destroy this
+            Destroy(gameObject);
+
+        //Sets this to not be destroyed when reloading scene
+        DontDestroyOnLoad(gameObject);
+
         boardScript = GetComponent<BoardManager>();
         Init();
-	}
+        //boardScript.LevelSelector(level);
+    }
 
     //Called each time a level was loaded
-    void OnLevelWasLoaded(int index)
+    public void OnLevelWasLoaded(int index)
     {
         //Add one to our level number.
         level++;
@@ -40,9 +48,9 @@ public class GameManager : MonoBehaviour {
     {
         boardScript.LevelSelector(level);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 
 	}
 }
