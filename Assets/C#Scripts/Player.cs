@@ -73,7 +73,10 @@ public class Player : Unit {
 
 		// Ititializes the player stats.
 		InitPlayer ();
-//		SetMoveLimits (9,9);
+        //		SetMoveLimits (9,9);
+
+        TargettedCamera.setTarget(this);
+
 	}
 
 	public override GameObject[] Inventory(){
@@ -83,7 +86,7 @@ public class Player : Unit {
 
 	public override void Move(){
 		// Store position to prevent crazy additive movement
-		this.transform.position = this.transform.position;
+		//this.transform.position = this.transform.position;
 		
 		// Checks for directional presses once, and converts them to ints
 		// (for future method usage such as movement)
