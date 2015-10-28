@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class Moblin : Unit {
 
@@ -17,10 +18,36 @@ public class Moblin : Unit {
 	// The direction state the enemy is facing.
 	static string state;
 
+	public void InitMoblin(int level) {
+		CalculateStats (level);
+	}
+
 	// Initializes key variables for the Moblin enemy.
 	void Start () {
+		InitMoblin (1);
 		moblinAnimator = this.GetComponent<Animator> ();
 		state = "MoblinForward";
+	}
+
+	public void CalculateStats(int level){
+		this.Level = level;
+		this.Health = 3;
+		this.Attack = 1;
+		this.Defence = 1;
+		this.Speed = 1;
+		this.Experience = 10 * level;
+
+		for(int i = 1; i < level; i++){
+			if(i % 2 == 0){
+				this.Health++;
+				this.Attack++;
+				this.Defence++;
+			}
+			else {
+				this.Attack++;
+				this.Speed++;
+			}
+		}
 	}
 
 	public override void Move(){
@@ -91,10 +118,6 @@ public class Moblin : Unit {
 				break;
 			}
 		}
-	}
-
-	public override GameObject[] Inventory(){
-		return null;
 	}
 
 	// Update is called once per frame

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public abstract class Unit : MonoBehaviour {
 	
@@ -7,7 +8,7 @@ public abstract class Unit : MonoBehaviour {
 	int stat;
 	// Maximum amount of moves that an entity can make in one turn
 	double maxmvs;
-	// Remaining turns. (Some actions take partial movess, negative moves results in skipped turns
+	// Remaining turns. (Some actions take partial moves, negative moves results in skipped turns
 	double mvs;
 
 	// variables to be adjusted by collision check
@@ -27,6 +28,9 @@ public abstract class Unit : MonoBehaviour {
 	public int Experience { get; set; }
 
 	public int Currency { get; set; }
+
+	// Every unit has an inventory.
+	public List<Item> Inventory { get; set; }
 
 	// State Property
 	public int state
@@ -65,9 +69,6 @@ public abstract class Unit : MonoBehaviour {
 
 	// Every unit must have an algorithm or method of moving on the board.
 	public abstract void Move();
-
-	// Every unit must have an inventory.
-	public abstract GameObject[] Inventory ();
 
 	// Use this for initialization
 	void Start () {

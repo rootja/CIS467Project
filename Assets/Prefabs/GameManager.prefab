@@ -55,6 +55,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floorTile: {fileID: 185736, guid: 70e2cd5ab958d4f38ba9aa0f87fa37ad, type: 2}
   wallTile: {fileID: 117544, guid: e8ce4e46c57a74905bbf59270f464a0d, type: 2}
+  waterTile: {fileID: 142490, guid: d5f99a6d16c0c447f8425a483153f921, type: 2}
   items:
   - {fileID: 148738, guid: 9353e65028cef4d5a9176daf3eb8b1ea, type: 2}
   - {fileID: 146282, guid: c39188568bb07438da21d7ca359821b3, type: 2}
@@ -62,6 +63,9 @@ MonoBehaviour:
   - {fileID: 149136, guid: df7552a20080a4f71923be53097a5762, type: 2}
   - {fileID: 134680, guid: 9d6f330e07f3b4f08ade92e23ae55b5e, type: 2}
   - {fileID: 105058, guid: a60f6bba7b45545eeb337ea8af3e19e0, type: 2}
+  enemies:
+  - {fileID: 127472, guid: 9a1c0250669bf57478a2d36c4183ac74, type: 2}
+  - {fileID: 119674, guid: 165a67011cd494b679262b463da15305, type: 2}
   ladder: {fileID: 152950, guid: 90ce2abc87ca645b58e0f629844fb897, type: 2}
   rows: 0
   columns: 0
@@ -71,7 +75,15 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: enemies.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: waterTile
+      value: 
+      objectReference: {fileID: 142490, guid: d5f99a6d16c0c447f8425a483153f921, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100838}

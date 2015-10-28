@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Instantiate (player);
-		Instantiate (cynthia);
+		//Instantiate (cynthia);
 	}
 	
 	// Update is called once per frame

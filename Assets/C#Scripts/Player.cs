@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Random = UnityEngine.Random;
+using System.Collections.Generic;
 
 public class Player : Unit {
 
@@ -38,6 +39,10 @@ public class Player : Unit {
 	// The initial amount of experience needed to level up.
 	const int EXPERIENCE_FACTOR = 10;
 
+	public LayerMask blockingLayer;
+
+	int maxHealth;
+
 	Animator animator;
 
 	BoardManager bm;
@@ -48,15 +53,8 @@ public class Player : Unit {
 	public GridAura gridSpot;
 
 	GridAura gridInstance;
-
 	// A string variable that we can change while playing the game or outside Play mode.
 	public string myName;
-
-	int playerLevel;
-	int playerHealth;
-	int playerAttack;
-	int playerDefence;
-	int playerSpeed;
 
 	public int[] stats;
 
@@ -66,10 +64,15 @@ public class Player : Unit {
 		this.Attack = 1;
 		this.Defence = 1;
 		this.Speed = 1;
+
 		this.Experience = 0;
 		this.Currency = 0;
 
-		stats = new int { Health, Attack, Defence, Speed };
+		maxHealth = this.Health;
+
+		stats = new int [] { Health, Attack, Defence, Speed };
+
+		this.Inventory = new List<Item> ();
 
 		state = 0;
 		maxmoves = 1.0;
@@ -79,28 +82,54 @@ public class Player : Unit {
 		canWalk = true;
 		canJump = true;
 	}
-
-	// Sets the borders for the player movement.
-//	public void SetMoveLimits(int rows = 0, int columns = 0){
-//		this.rows = rows;
-//		this.columns = columns;
-//	}
-
+	
 	// Use this for initialization
 	void Start () {
+
 		animator = GetComponent<Animator> ();
 
 		// Ititializes the player stats.
 		InitPlayer ();
-//		SetMoveLimits (9,9);
+
 	}
 
-	public override GameObject[] Inventory(){
-		// Will be used to store user items.
-		return null;
+	public bool CanMove(bool isJump = false){
+		//--------------------------Handles collisions in the blocking layer----------------------
+		Vector3 startPosition = this.transform.position;
+		Vector3 endPosition = this.transform.position;
+		
+		int movement;
+		// If jump is true, then the movement space is 2, otherwise the player can move 1 space.
+		movement = isJump ? 2 : 1;
+
+		if (Input.GetKeyDown (KeyCode.RightArrow)) {
+			endPosition = new Vector3 (startPosition.x + movement, startPosition.y);
+		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+			endPosition = new Vector3 (startPosition.x - movement, startPosition.y);
+		} else if (Input.GetKeyDown (KeyCode.UpArrow)) {
+			endPosition = new Vector3 (startPosition.x, startPosition.y + movement);
+		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
+			endPosition = new Vector3 (startPosition.x, startPosition.y - movement);
+		}
+		
+		BoxCollider2D boxCollider = this.GetComponent<BoxCollider2D> ();
+		
+		boxCollider.enabled = false;
+		
+		RaycastHit2D hit = Physics2D.Linecast (startPosition, endPosition, blockingLayer);
+		
+		boxCollider.enabled = true;
+
+		if (!hit) {
+			//this.transform.position = endPosition;
+			return true;
+		}
+		return false;
+		//----------------------------------------------------------------------------------------
 	}
 
 	public override void Move(){
+
 		// Store position to prevent crazy additive movement
 		this.transform.position = this.transform.position;
 		
@@ -317,8 +346,6 @@ public class Player : Unit {
 		// attack target location
 		Vector3 goal = new Vector3((this.transform.position.x + x),(this.transform.position.y + y), 0);
 
-
-		
 		state = 1;
 		return;
 		
@@ -338,8 +365,8 @@ public class Player : Unit {
 //	}
 
 	// Randomizes the stat bonuses when leveling.
-	void RandomizeStatBonuses(){
-		// A maximum of 3 stats bonuses can occur when leveling.
+	void RandomizeStatBonuses() {
+		// A maximum of 3 stat bonuses can occur when leveling.
 		int maxBonuses = 3;
 
 		int index;
@@ -352,25 +379,83 @@ public class Player : Unit {
 	}
 
 	// Updates the player's level and stats.
-	void LevelUp(){
+	void LevelUp() {
 		// Increases the player's level by 1.
 		this.Level++;
+		int previousHealth = this.Health;
 		// Increases the player's stats.
 		RandomizeStatBonuses ();
+		// The amount of health added upon leveling.
+		int addedHealth = this.Health - previousHealth;
+		// Adjusts maxHealth if the Health stat was increased.
+		if (addedHealth > 0) {
+			maxHealth += addedHealth;
+		}
 	}
 
-	public void DefeatEnemy(Unit enemy){
+	public void DefeatEnemy(Unit enemy) {
 		// Figures out how much experience is required for the player to level up.
 		int nextLevel = (int) Mathf.Pow (this.Level, 2) * EXPERIENCE_FACTOR;
-
 		// If the player still needs experience after defeating the enemy, then simply update
 		// the player's experience.
-		if ((this.Experience + enemy.Experience) > nextLevel) {
+		if ((this.Experience + enemy.Experience) < nextLevel) {
 			this.Experience += enemy.Experience;
 		} else {
 			// Else, add the experience and increment the player's level.
 			this.Experience += enemy.Experience;
-			LevelUp();
+			// Level up the player until they don't meet the nextLevel experience threshold.
+			while(this.Experience >= nextLevel){
+				LevelUp();
+				nextLevel = (int) Mathf.Pow (this.Level, 2) * EXPERIENCE_FACTOR;
+			}
 		}
+	}
+
+	void OnCollisionEnter2D(Collision2D collider) {
+		if (collider.gameObject.tag.Equals ("Enemy")) {
+			string enemyType;
+			if(collider.gameObject.name.Contains("(Clone)")){
+				// Gets rid of the (clone) in the object name.
+				enemyType = collider.gameObject.name.Substring(0,collider.gameObject.name.Length - 7);
+			}
+			else{
+				enemyType = collider.gameObject.name;
+			}
+			switch(enemyType){
+			case "Cynthia":
+				DefeatEnemy(collider.gameObject.GetComponent<Cynthia>());
+				break;
+			case "Moblin":
+				DefeatEnemy(collider.gameObject.GetComponent<Moblin>());
+				break;
+			}
+			Destroy (collider.gameObject);
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D collider){
+		if (collider.gameObject.tag.Equals ("Item")) {
+			// Adds the item to the player's inventory.
+			Item item = new Item(collider.gameObject.name);
+			if(item.Name.Contains("Rupee") || item.Name.Contains ("Heart")) {
+				UseItem(item);
+			}
+			else {
+				this.Inventory.Add (item);
+			}
+			// Removes the item from the game board.
+			Destroy (collider.gameObject);
+		}
+	}
+
+	void UseItem(Item item) {
+		// Use the item.
+		item.Use (this);
+		// If the item healed any health, check if it healthed over the player's max allowed health.
+		if (this.Health > maxHealth) {
+			this.Health = maxHealth;
+		}
+		// Remove the item from the player's inventory.
+		Inventory.Remove(item);
 	}
 }
