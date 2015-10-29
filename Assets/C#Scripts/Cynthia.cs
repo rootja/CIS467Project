@@ -18,8 +18,12 @@ public class Cynthia : Unit {
 	public string myName;
 
 	public void InitPlayer(string unitName = "Cynthia"){
-		this.Health = 5;
 		this.Level = 3;
+		this.Health = 5;
+		this.Attack = 1;
+		this.Defense = 1;
+		this.Speed = 1;
+
 		this.Currency = 10;
 		this.Experience = 50;
 		myName = unitName;

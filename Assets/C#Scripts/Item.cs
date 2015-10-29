@@ -32,9 +32,6 @@ public class Item {
 		case "HealthPotion":
 			player.Health += 5;
 			break;
-		case "Key":
-			// TODO: Will unlock door.
-			break;
 		}
 	}
 

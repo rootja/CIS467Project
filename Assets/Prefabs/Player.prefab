@@ -60,7 +60,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .899999976, y: .899999976}
+  m_Size: {x: 1, y: 1}
 --- !u!95 &9549760
 Animator:
   serializedVersion: 3
@@ -92,9 +92,11 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 1024
+  unitsLayer:
+    serializedVersion: 2
+    m_Bits: 512
   gridSpot: {fileID: 11477616, guid: 105d51aff6d92764baa65dd4991a36bc, type: 2}
   myName: TestMeister
-  stats: 
 --- !u!212 &21212916
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -150,11 +152,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Size.x
-      value: .899999976
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Size.y
-      value: .899999976
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Mass
@@ -176,6 +178,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: blockingLayer.m_Bits
       value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: unitLayer.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: unitsLayer.m_Bits
+      value: 512
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -6,17 +6,12 @@ public class Moblin : Unit {
 
 	Animator moblinAnimator;
 
-	// The amount of space on the board to move each frame if a movement key is pressed down.
-	const float MOVE_PER_FRAME = 0.02F;
+	int numFrames;
 
-	// The direction states for when the enemy is not moving.
-	const string FORWARD_STATE = "MoblinForward";
-	const string BACKWARD_STATE = "MoblinBackward";
-	const string LEFT_STATE = "MoblinLeft";
-	const string RIGHT_STATE = "MoblinRight";
+	const int FRAMES_PER_TURN = 60;
 
-	// The direction state the enemy is facing.
-	static string state;
+	public LayerMask blockingLayer;
+	public LayerMask unitsLayer;
 
 	public void InitMoblin(int level) {
 		CalculateStats (level);
@@ -25,15 +20,15 @@ public class Moblin : Unit {
 	// Initializes key variables for the Moblin enemy.
 	void Start () {
 		InitMoblin (1);
+		numFrames = 0;
 		moblinAnimator = this.GetComponent<Animator> ();
-		state = "MoblinForward";
 	}
 
 	public void CalculateStats(int level){
 		this.Level = level;
 		this.Health = 3;
 		this.Attack = 1;
-		this.Defence = 1;
+		this.Defense = 1;
 		this.Speed = 1;
 		this.Experience = 10 * level;
 
@@ -41,7 +36,7 @@ public class Moblin : Unit {
 			if(i % 2 == 0){
 				this.Health++;
 				this.Attack++;
-				this.Defence++;
+				this.Defense++;
 			}
 			else {
 				this.Attack++;
@@ -50,78 +45,60 @@ public class Moblin : Unit {
 		}
 	}
 
+	public void CalculateDamageDealt(Unit player){
+		// If the enemy's attack stat is greater than the player's defense, then set the new damage amount.
+		// The enemy's attack must be at least 2 more than the player's defense for the damage to be more
+		// than 1.
+		int damage = (this.Attack > player.Defense) ? this.Attack - player.Defense : 1;
+		player.Health -= damage;
+	}
+
 	public override void Move(){
-		// Stores the Moblin's current position.
-		Vector3 currentPostion = this.transform.position;
-
-		// Normal 4-way Move Conditions.
-		if (Input.GetKey(KeyCode.DownArrow) && !(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))) {
-			this.transform.position = new Vector3 (currentPostion.x, currentPostion.y + (MOVE_PER_FRAME*-1), 0F);
-			moblinAnimator.Play("MoblinMovingForward");
-			state = FORWARD_STATE;
+		Vector3 startPosition = this.transform.position;
+		Vector3 endPosition = this.transform.position;
+		
+		int movement = 1;
+		int direction = (int)(Random.value * 4);
+		
+		switch (direction) {
+		case 0: 
+			endPosition = new Vector3 (startPosition.x, startPosition.y - movement);
+			moblinAnimator.Play ("MoblinForwardIdle");
+			break;
+		case 1:
+			endPosition = new Vector3 (startPosition.x, startPosition.y + movement);
+			moblinAnimator.Play ("MoblinBackwardIdle");
+			break;
+		case 2:
+			endPosition = new Vector3 (startPosition.x + movement, startPosition.y);
+			moblinAnimator.Play ("MoblinRightIdle");
+			break;
+		case 3:
+			endPosition = new Vector3 (startPosition.x - movement, startPosition.y);
+			moblinAnimator.Play ("MoblinLeftIdle");
+			break;
 		}
-		if (Input.GetKey(KeyCode.UpArrow) && !(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))) {
-			this.transform.position = new Vector3 (currentPostion.x, currentPostion.y + MOVE_PER_FRAME, 0F);
-			moblinAnimator.Play("MoblinMovingBackward");
-			state = BACKWARD_STATE;
-		}
-		if (Input.GetKey(KeyCode.LeftArrow) && !(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))) {
-			this.transform.position = new Vector3 (currentPostion.x + (MOVE_PER_FRAME*-1), currentPostion.y, 0F);
-			moblinAnimator.Play ("MoblinMovingLeft");
-			state = LEFT_STATE;
-		}
-		if (Input.GetKey(KeyCode.RightArrow) && !(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))) {
-			this.transform.position = new Vector3 (currentPostion.x + MOVE_PER_FRAME, currentPostion.y, 0F);
-			moblinAnimator.Play ("MoblinMovingRight");
-			state = RIGHT_STATE;
-		}
-
-		// Diagonal Move Conditions.
-		if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.DownArrow)) {
-			this.transform.position = new Vector3 (currentPostion.x + (MOVE_PER_FRAME*-1), currentPostion.y + (MOVE_PER_FRAME*-1), 0F);
-			moblinAnimator.Play("MoblinMovingForward");
-			state = FORWARD_STATE;
-		}
-		if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.UpArrow)) {
-			this.transform.position = new Vector3 (currentPostion.x + (MOVE_PER_FRAME*-1), currentPostion.y + MOVE_PER_FRAME, 0F);
-			moblinAnimator.Play("MoblinMovingBackward");
-			state = BACKWARD_STATE;
-		}
-		if (Input.GetKey(KeyCode.RightArrow) && Input.GetKey(KeyCode.DownArrow)) {
-			this.transform.position = new Vector3 (currentPostion.x + MOVE_PER_FRAME, currentPostion.y + (MOVE_PER_FRAME*-1), 0F);
-			moblinAnimator.Play("MoblinMovingForward");
-			state = FORWARD_STATE;
-		}
-		if (Input.GetKey(KeyCode.RightArrow) && Input.GetKey(KeyCode.UpArrow)) {
-			this.transform.position = new Vector3 (currentPostion.x + MOVE_PER_FRAME, currentPostion.y + MOVE_PER_FRAME, 0F);
-			moblinAnimator.Play("MoblinMovingBackward");
-			state = BACKWARD_STATE;
-		}
-
-		// The direction state that the enemy is facing.
-		if (!(Input.anyKey)) {
-			switch(state){
-			case "MoblinForward":
-				moblinAnimator.Play("MoblinForwardIdle");
-				break;
-			case "MoblinBackward":
-				moblinAnimator.Play("MoblinBackwardIdle");
-				break;
-			case "MoblinLeft":
-				moblinAnimator.Play("MoblinLeftIdle");
-				break;
-			case "MoblinRight":
-				moblinAnimator.Play("MoblinRightIdle");
-				break;
-			default:
-				moblinAnimator.Play("MoblinForwardIdle");
-				break;
-			}
+		
+		BoxCollider2D boxCollider = this.GetComponent<BoxCollider2D> ();
+		
+		boxCollider.enabled = false;
+		
+		RaycastHit2D hit = Physics2D.Linecast (startPosition, endPosition, blockingLayer);
+		RaycastHit2D hitUnit = Physics2D.Linecast (startPosition, endPosition, unitsLayer);
+		
+		boxCollider.enabled = true;
+		
+		if (!hit && !hitUnit) {
+			this.transform.position = endPosition;
 		}
 	}
 
 	// Update is called once per frame
 	void Update () {
-		Move ();
+		numFrames++;
+		if (numFrames == FRAMES_PER_TURN) {
+			Move ();
+			numFrames = 0;
+		}
 	}
 }

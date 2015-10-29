@@ -21,7 +21,7 @@ public abstract class Unit : MonoBehaviour {
 
 	public int Attack { get; set; }
 
-	public int Defence { get; set; }
+	public int Defense { get; set; }
 
 	public int Speed { get; set; }
 

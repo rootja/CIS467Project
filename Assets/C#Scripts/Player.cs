@@ -40,6 +40,7 @@ public class Player : Unit {
 	const int EXPERIENCE_FACTOR = 10;
 
 	public LayerMask blockingLayer;
+	public LayerMask unitsLayer;
 
 	int maxHealth;
 
@@ -56,13 +57,15 @@ public class Player : Unit {
 	// A string variable that we can change while playing the game or outside Play mode.
 	public string myName;
 
-	public int[] stats;
+	int[] stats;
 
 	public void InitPlayer(string playerName = "Link"){
+		myName = playerName;
+
 		this.Level = 1;
 		this.Health = 3;
 		this.Attack = 1;
-		this.Defence = 1;
+		this.Defense = 1;
 		this.Speed = 1;
 
 		this.Experience = 0;
@@ -70,7 +73,7 @@ public class Player : Unit {
 
 		maxHealth = this.Health;
 
-		stats = new int [] { Health, Attack, Defence, Speed };
+		stats = new int [] { Health, Attack, Defense, Speed };
 
 		this.Inventory = new List<Item> ();
 
@@ -78,23 +81,18 @@ public class Player : Unit {
 		maxmoves = 1.0;
 
 		moves = maxmoves;
-		myName = playerName;
 		canWalk = true;
 		canJump = true;
 	}
 	
 	// Use this for initialization
 	void Start () {
-
 		animator = GetComponent<Animator> ();
-
 		// Ititializes the player stats.
 		InitPlayer ();
-
 	}
 
-	public bool CanMove(bool isJump = false){
-		//--------------------------Handles collisions in the blocking layer----------------------
+	public void CanMove(bool isJump = false){
 		Vector3 startPosition = this.transform.position;
 		Vector3 endPosition = this.transform.position;
 		
@@ -104,12 +102,16 @@ public class Player : Unit {
 
 		if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			endPosition = new Vector3 (startPosition.x + movement, startPosition.y);
+			animator.Play ("PlayerRightIdle");
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
 			endPosition = new Vector3 (startPosition.x - movement, startPosition.y);
+			animator.Play ("PlayerLeftIdle");
 		} else if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			endPosition = new Vector3 (startPosition.x, startPosition.y + movement);
+			animator.Play ("PlayerBackwardIdle");
 		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
 			endPosition = new Vector3 (startPosition.x, startPosition.y - movement);
+			animator.Play ("PlayerForwardIdle");
 		}
 		
 		BoxCollider2D boxCollider = this.GetComponent<BoxCollider2D> ();
@@ -117,15 +119,13 @@ public class Player : Unit {
 		boxCollider.enabled = false;
 		
 		RaycastHit2D hit = Physics2D.Linecast (startPosition, endPosition, blockingLayer);
+		RaycastHit2D hitUnit = Physics2D.Linecast (startPosition, endPosition, unitsLayer);
 		
 		boxCollider.enabled = true;
 
-		if (!hit) {
-			//this.transform.position = endPosition;
-			return true;
+		if (!hit && !hitUnit) {
+			this.transform.position = endPosition;
 		}
-		return false;
-		//----------------------------------------------------------------------------------------
 	}
 
 	public override void Move(){
@@ -290,6 +290,7 @@ public class Player : Unit {
 	void Update () {
 		base.Update ();
 		Move ();
+//		CanMove (Input.GetKey(KeyCode.D));
 	}
 
 	//moves the character occording to the inputs
@@ -375,6 +376,20 @@ public class Player : Unit {
 			index = (int) (Random.value * stats.Length);
 			// Increases the stat at the generated index by 1.
 			stats[index]++;
+			switch(index){
+			case 0: 
+				Health++;
+				break;
+			case 1:
+				Attack++;
+				break;
+			case 2:
+				Defense++;
+				break;
+			case 3:
+				Speed++;
+				break;
+			}
 		}
 	}
 
@@ -415,7 +430,7 @@ public class Player : Unit {
 		if (collider.gameObject.tag.Equals ("Enemy")) {
 			string enemyType;
 			if(collider.gameObject.name.Contains("(Clone)")){
-				// Gets rid of the (clone) in the object name.
+				// Gets rid of the (Clone) in the object name.
 				enemyType = collider.gameObject.name.Substring(0,collider.gameObject.name.Length - 7);
 			}
 			else{
@@ -423,13 +438,28 @@ public class Player : Unit {
 			}
 			switch(enemyType){
 			case "Cynthia":
-				DefeatEnemy(collider.gameObject.GetComponent<Cynthia>());
+				if(Input.GetKeyUp(KeyCode.P)) {
+					CalculateDamageDealt(collider.gameObject.GetComponent<Cynthia>());
+				}
+				if(collider.gameObject.GetComponent<Cynthia>().Health <= 0){
+					DefeatEnemy(collider.gameObject.GetComponent<Cynthia>());
+				}
+				if(collider.gameObject.GetComponent<Cynthia>().Health <= 0){
+					Destroy (collider.gameObject);
+				}
 				break;
 			case "Moblin":
-				DefeatEnemy(collider.gameObject.GetComponent<Moblin>());
+				if(Input.GetKeyUp(KeyCode.P)) {
+					CalculateDamageDealt(collider.gameObject.GetComponent<Moblin>());
+				}
+				if(collider.gameObject.GetComponent<Moblin>().Health <= 0){
+					DefeatEnemy(collider.gameObject.GetComponent<Moblin>());
+				}
+				if(collider.gameObject.GetComponent<Moblin>().Health <= 0){
+					Destroy (collider.gameObject);
+				}
 				break;
 			}
-			Destroy (collider.gameObject);
 		}
 	}
 
@@ -457,5 +487,13 @@ public class Player : Unit {
 		}
 		// Remove the item from the player's inventory.
 		Inventory.Remove(item);
+	}
+
+	public void CalculateDamageDealt(Unit enemy){
+		// If the player's attack stat is greater than the enemy's defense, then set the new damage amount.
+		// The player's attack must be at least 2 more than the enemy's defense for the damage to be more
+		// than 1.
+		int damage = (this.Attack > enemy.Defense) ? this.Attack - enemy.Defense : 1;
+		enemy.Health -= damage;
 	}
 }
