@@ -18,10 +18,14 @@ public class Cynthia : Unit {
 	public string myName;
 
 	public void InitPlayer(string unitName = "Cynthia"){
-		health = 5;
-		level = 3;
-		currency = 10;
-		experience = 50;
+		this.Level = 3;
+		this.Health = 5;
+		this.Attack = 1;
+		this.Defense = 1;
+		this.Speed = 1;
+
+		this.Currency = 10;
+		this.Experience = 50;
 		myName = unitName;
 		state = 0;
 		maxmoves = 1.0;
@@ -29,11 +33,6 @@ public class Cynthia : Unit {
 
 		canWalk = true;
 		canJump = true;
-	}
-
-	public override GameObject[] Inventory(){
-		// Will be used to store user items.
-		return null;
 	}
 
 	// Sets the borders for the player movement.
@@ -169,7 +168,7 @@ public class Cynthia : Unit {
 
 		// Ititializes the player stats.
 		InitPlayer ();
-		this.transform.position = new Vector3(2,3,0);
+		//this.transform.position = new Vector3(2,3,0);
 		SetMoveLimits (9,9);
 	}
 

@@ -5,16 +5,21 @@ using Random = UnityEngine.Random;
 using System.Collections.Generic;
 
 public class BoardManager : MonoBehaviour {
-
+	
 	public GameObject floorTile;
 	public GameObject wallTile;
+	public GameObject waterTile;
 
-	public GameObject[] items;
+	public GameObject[] basicItems;
+	public GameObject[] keyItems;
+	public GameObject[] enemies;
 
 	public GameObject ladder;
-
+	
 	public int rows;
 	public int columns;
+
+	List<Vector3> filledPositions;
 
 	private Transform boardTiles;
 	private Transform boardItems;
@@ -35,11 +40,13 @@ public class BoardManager : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-
+		
 		boardTiles = new GameObject ("BoardTiles").transform;
 
 		// Assigns values to the column and row variables.
 		SetupBoard (15, 9);
+
+		filledPositions = new List<Vector3> ();
 		
 		// Adds the floor tiles to the game board.
 		for (int i = 0; i < rows; i++) {
@@ -63,20 +70,68 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 
+		GenerateKeyItems ();
+
+		DrawPond (2, 1, new Vector3 (1, 3));
+
+		DrawPond (1, 2, new Vector3 (9, 2));
+
 		// Adds a ladder right corner of the moveable section of the board.
-		Instantiate (ladder, new Vector3 (rows-1, columns-1, 0), Quaternion.identity);
+		Instantiate (ladder, new Vector3 (rows-1, columns-1), Quaternion.identity);
+
+		SpawnEnemies(0, new Vector3 [] { new Vector3(3,6), new Vector3(8,2), new Vector3(10,7) });
+		SpawnEnemies(1, new Vector3 [] { new Vector3(5,5), new Vector3(7,4), new Vector3(8,8) });
 
 		// May generate items up to the specified number and place them on the board.
-		GenerateItems (10);
+		GenerateBasicItems (6);
 
+	}
+
+	public void DrawPond(int rows, int columns, Vector3 position){
+		GameObject newTile;
+		Vector3 tilePosition;
+		for (int i = 0; i < rows; i++) {
+			tilePosition = new Vector3(position.x, position.y + i);
+			if(!filledPositions.Contains(tilePosition)){
+				newTile = Instantiate (waterTile, new Vector3(position.x, position.y + i), Quaternion.identity) as GameObject;
+				filledPositions.Add(newTile.transform.position);
+				newTile.transform.SetParent(boardTiles);
+			}
+			for(int j = 1; j < columns; j++){
+				tilePosition = new Vector3(position.x + (j % columns), position.y + (i % rows));
+				if(!filledPositions.Contains(tilePosition)){
+					newTile = Instantiate (waterTile, new Vector3(position.x + (j % columns), position.y + (i % rows)), Quaternion.identity) as GameObject;
+					newTile.transform.SetParent(boardTiles);
+					filledPositions.Add(newTile.transform.position);
+				}
+			}
+		}
+	}
+
+	void GenerateKeyItems(){
+		Vector3 position;
+		foreach (GameObject keyItem in keyItems) {
+			// Values between 1 and the number of rows-1.
+			float x = (int)(Random.value * (rows-2)+1);
+			// Values between 1 and the number of columns-1.
+			float y = (int)(Random.value * (columns-2)+1);
+
+			// The position on the board to place the item.
+			Vector3 location = new Vector3(x,y);
+			
+			// Checks if the random position hasn't been added already.
+			if(filledPositions.Contains(location) == false){
+				// Add the position to the list.
+				filledPositions.Add(location);
+				// Instantiate the new item GameObject.
+				GameObject newItem = Instantiate (keyItem, location, Quaternion.identity) as GameObject;
+			}
+		}
 	}
 
 	// Generates an item and places it at some random position on the board. Note: The floor lining the wall
 	// will not have items in it. This is so that the player doesn't get blocked when we add obstacles.
-	public void GenerateItems(int numberOfItems){
-		// Holds the positions of each item added to the game board.
-		List<Vector3> positions = new List<Vector3> ();
-
+	void GenerateBasicItems(int numberOfItems){
 		boardItems = new GameObject ("BoardItems").transform;
 
 		// Adds items at random positions on the board.
@@ -86,13 +141,13 @@ public class BoardManager : MonoBehaviour {
 			// Values between 1 and the number of columns-1.
 			float y = (int)(Random.value * (columns-2)+1);
 
-			// -1 for the z-axis allows the sprite to be displayed in front of the tile.
-			Vector3 location = new Vector3(x,y,0);
+			// The position on the board to place the item.
+			Vector3 location = new Vector3(x,y);
 
 			// Checks if the random position hasn't been added already.
-			if(positions.Contains(location) == false){
+			if(filledPositions.Contains(location) == false){
 				// Add the position to the list.
-				positions.Add(location);
+				filledPositions.Add(location);
 				// Instantiate the new item GameObject.
 				GameObject newItem = Instantiate (RandomItem(), location, Quaternion.identity) as GameObject;
 				// Add the item to a parent GameObject to reduce cluster in the hierarchy.
@@ -103,14 +158,20 @@ public class BoardManager : MonoBehaviour {
 
 	GameObject RandomItem(){
 		// Generates a random number between 0 and the size of the list of items.
-		int randomNum = (int) (Random.value * items.Length);
-
-		GameObject obj = items[randomNum];
-
+		int randomNum = (int) (Random.value * basicItems.Length);
+		GameObject obj = basicItems[randomNum];
 		return obj;
-
 	}
-	
+
+	void SpawnEnemies (int index, Vector3 [] positions){
+		foreach (Vector3 position in positions) {
+			if(!filledPositions.Contains(position)) {
+				Instantiate(enemies[index], position, Quaternion.identity);
+				filledPositions.Add (position);
+			}
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 

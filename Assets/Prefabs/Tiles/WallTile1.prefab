@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 448942}
   - 61: {fileID: 6120108}
   - 212: {fileID: 21204282}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: WallTile1
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 473174}
   - 212: {fileID: 21253868}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: WallTile1
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .899999976, y: 9.89999962}
+  m_Size: {x: 1, y: 1}
 --- !u!212 &21204282
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -94,7 +94,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 14e113ff35ffc4c3fa7651f401a9e96d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &21253868
@@ -132,15 +132,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_Layer
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Size.x
-      value: .899999976
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Size.y
-      value: 9.89999962
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_TagString
@@ -158,6 +158,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Material
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

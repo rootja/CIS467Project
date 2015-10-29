@@ -24,6 +24,7 @@ public class PauseScript : MonoBehaviour {
         optionsButton = optionsButton.GetComponent<Button>();
         exitButton = exitButton.GetComponent<Button>();
         quitButton = quitButton.GetComponent<Button>();*/
+		Time.timeScale = 1;
     }
 	
 	// Update is called once per frame
@@ -131,5 +132,5 @@ public class PauseScript : MonoBehaviour {
         PauseMenu.SetActive(false);
         Application.Quit();
     }
-
+	
 }

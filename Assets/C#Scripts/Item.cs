@@ -1,18 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Item : MonoBehaviour {
+public class Item {
 
-	// Every item should have some sort of an effect when either acquired or used.
-	public abstract void Effect ();
+	public string Name { get; set; }
 
-	// Use this for initialization
-	void Start () {
-		
+	public Item(string itemName){
+		if(itemName.Contains("(Clone)")){
+			Name = itemName.Substring(0, itemName.Length - 7);
+		}
+		else{
+			Name = itemName;
+		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	// Every item should have some sort of an effect when used.
+	public void Use (Player player){
+		switch (Name) {
+		case "Heart":
+			player.Health++;
+			break;
+		case "RupeeSmall":
+			player.Currency++;
+			break;
+		case "RupeeMedium":
+			player.Currency += 5;
+			break;
+		case "RupeeLarge":
+			player.Currency += 10;
+			break;
+		case "HealthPotion":
+			player.Health += 5;
+			break;
+		}
 	}
+
 }
