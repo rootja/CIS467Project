@@ -13,28 +13,28 @@ public class Player : Unit {
 	 */
 
 	// Up
-    public	static string keyUP = "up";
+	public	static KeyCode keyUP = KeyCode.UpArrow;
 	// Down
-	public	static string keyDOWN = "down";
+	public	static KeyCode keyDOWN = KeyCode.DownArrow;
 	// Left
-	public static string keyLEFT = "left";
+	public static KeyCode keyLEFT = KeyCode.LeftArrow;
 	// Right
-	public static string keyRIGHT = "right";
-
+	public static KeyCode keyRIGHT = KeyCode.RightArrow;
+	
 	// Enter walking mode and walk
-	public static string keyMOVE = "a";
+	public static KeyCode keyMOVE = KeyCode.A;
 	// Enter targeting mode and attack
-	public static string keyATTACK = "s";
+	public static KeyCode keyATTACK = KeyCode.S;
 	// Open Inventory to use items?
-	public static string keyITEM = "d";
+	public static KeyCode keyITEM = KeyCode.D;
 	// Exit other modes, including inventory
-	public static string keyCANCEL = "space";
-
+	public static KeyCode keyCANCEL = KeyCode.Space;
+	
 	//The following two keys may belong somewhere else, I just wanted to set a framework
 	// Bring up Pause menu
-	public static string keyPAUSE = "return";
+	public static KeyCode keyPAUSE = KeyCode.Escape;
 	// Closes the program immediately, saving any states if neccesary
-	public static string keyEXIT = "escape";
+	public static KeyCode keyEXIT = KeyCode.Return;
 
 	// The initial amount of experience needed to level up.
 	const int EXPERIENCE_FACTOR = 10;

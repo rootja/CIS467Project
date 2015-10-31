@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -6,24 +6,13 @@ public class PauseScript : MonoBehaviour {
 
     public bool isPaused = false;
     public static bool isKeysEnabled = true;
+	public static bool isOptionsActive = false;
     public GameObject PauseMenu;
-    /*public Button resumeButton;
-    public Button optionsButton;
-    public Button exitButton;
-    public Button quitButton;*/
-
-    //Test and verify if some of this code is even needed. 
-    //(Like resetting variables when exiting to main menu or quitting.)
 
 
 	// Use this for initialization
 	void Start ()
     {
-        Time.timeScale = 1;
-        /*resumeButton = resumeButton.GetComponent<Button>();
-        optionsButton = optionsButton.GetComponent<Button>();
-        exitButton = exitButton.GetComponent<Button>();
-        quitButton = quitButton.GetComponent<Button>();*/
 		Time.timeScale = 1;
     }
 	
@@ -33,37 +22,34 @@ public class PauseScript : MonoBehaviour {
         ScanForKeyStroke();
 	}
 
+	//Handles pause functions by scanning for "Pause" key.
     void ScanForKeyStroke()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+		//Consider doing "&& (isOptionsActive == false)" in below "if" so player can't resume game while options menu is active.
+        if((Input.GetKeyDown(Player.keyPAUSE)) && (!isOptionsActive))
         {
+			//This will trigger when the pause key is pressed during gameplay.
             if (isPaused == false)
             {
                 isPaused = true;
                 ToggleAudio();
                 Time.timeScale = 0;
                 LockInput(true);
-                /*resumeButton.enabled = true;
-                optionsButton.enabled = true;
-                exitButton.enabled = true;
-                quitButton.enabled = true;*/
                 PauseMenu.SetActive(true);
             }
+			//This will trigger when the pause key is pressed in the pause menu.
             else
             {
                 isPaused = false;
                 ToggleAudio();
                 Time.timeScale = 1;
                 LockInput(false);
-                /*resumeButton.enabled = false;
-                optionsButton.enabled = false;
-                exitButton.enabled = false;
-                quitButton.enabled = false;*/
                 PauseMenu.SetActive(false);
             }
         }
     }
 
+	//Turns game music on or off depending on pause settings.
     void ToggleAudio()
     {
         if(isPaused == true)
@@ -82,6 +68,7 @@ public class PauseScript : MonoBehaviour {
         }
     }
 
+	//Locks the player from operating the game if they are in the pause menu.
     void LockInput(bool setInputLock)
     {
         if(setInputLock)
@@ -94,43 +81,46 @@ public class PauseScript : MonoBehaviour {
         }
     }
 
+	//Resumes the game.
     public void ResumeGame()
     {
-        isPaused = false;
-        ToggleAudio();
-        Time.timeScale = 1;
-        LockInput(false);
-        /*resumeButton.enabled = false;
-        optionsButton.enabled = false;
-        exitButton.enabled = false;
-        quitButton.enabled = false;*/
-        PauseMenu.SetActive(false);
+		if(!isOptionsActive)
+		{
+			isPaused = false;
+			ToggleAudio();
+			Time.timeScale = 1;
+			LockInput(false);
+			PauseMenu.SetActive(false);
+		}
     }
 
+	//This will set the options menu to active, thereby triggering the options script.
     public void OptionsMenu()
     {
-        //Fill in logic for new options menu!
+		if (!isOptionsActive) {
+			isOptionsActive = true; 
+		}
     }
 
+	//Sends the player to the title menu.
     public void ExitToMainMenu()
     {
-        isPaused = false;
-        ToggleAudio();
-        LockInput(false);
-        /*resumeButton.enabled = false;
-        optionsButton.enabled = false;
-        exitButton.enabled = false;
-        quitButton.enabled = false;
-        PauseMenu.SetActive(false);*/
-        Application.LoadLevel(0);
+		if (!isOptionsActive) {
+			isPaused = false;
+			ToggleAudio();
+			LockInput(false);
+			Application.LoadLevel(0);
+		}
     }
 
+	//Quits the game.
     public void QuitGame()
     {
-        isPaused = false;
-        ToggleAudio();
-        PauseMenu.SetActive(false);
-        Application.Quit();
+		if (!isOptionsActive) {
+			isPaused = false;
+			ToggleAudio();
+			PauseMenu.SetActive(false);
+			Application.Quit();
+		}
     }
-	
 }
