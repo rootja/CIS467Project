@@ -19,18 +19,23 @@ public class Item {
 		switch (Name) {
 		case "Heart":
 			player.Health++;
+			Player.setHUDhealth(player.Health);
 			break;
 		case "RupeeSmall":
 			player.Currency++;
+			Player.setHUDcurrency(player.Currency);
 			break;
 		case "RupeeMedium":
 			player.Currency += 5;
+			Player.setHUDcurrency(player.Currency);
 			break;
 		case "RupeeLarge":
 			player.Currency += 10;
+			Player.setHUDcurrency(player.Currency);
 			break;
 		case "HealthPotion":
 			player.Health += 5;
+			Player.setHUDhealth(player.Health);
 			break;
 		}
 	}

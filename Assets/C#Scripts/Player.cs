@@ -39,6 +39,16 @@ public class Player : Unit {
 	// The initial amount of experience needed to level up.
 	const int EXPERIENCE_FACTOR = 10;
 
+	//These variables are accessed by the HUD
+	// The amount of health the player has.
+	public static int health;
+	// The max amount of health the player can have.
+	public static int maxhealth;
+	// The player's current level.
+	public static int playerLevel;
+	// The amount of rupees that the player currently has.
+	public static int currency;
+
 	public LayerMask blockingLayer;
 	public LayerMask unitsLayer;
 
@@ -58,6 +68,26 @@ public class Player : Unit {
 	public string myName;
 
 	int[] stats;
+
+	public static void setHUDhealth(int pHealth)
+	{
+		health = pHealth;
+	}
+
+	public static void setHUDmaxhealth(int pMaxHealth)
+	{
+		maxhealth = pMaxHealth;
+	}
+
+	public static void setHUDplayerlevel(int pPlayerLevel)
+	{
+		playerLevel = pPlayerLevel;
+	}
+
+	public static void setHUDcurrency(int pCurrency)
+	{
+		currency = pCurrency;
+	}
 
 	public void InitPlayer(string playerName = "Link"){
 		myName = playerName;
@@ -83,6 +113,11 @@ public class Player : Unit {
 		moves = maxmoves;
 		canWalk = true;
 		canJump = true;
+
+		setHUDhealth (this.Health);
+		setHUDmaxhealth (maxHealth);
+		setHUDplayerlevel (this.Level);
+		setHUDcurrency (this.Currency);
 	}
 	
 	// Use this for initialization
@@ -391,6 +426,7 @@ public class Player : Unit {
 				Speed++;
 				break;
 			}
+			setHUDhealth(Health);
 		}
 	}
 
@@ -398,6 +434,7 @@ public class Player : Unit {
 	void LevelUp() {
 		// Increases the player's level by 1.
 		this.Level++;
+		setHUDplayerlevel (this.Level);
 		int previousHealth = this.Health;
 		// Increases the player's stats.
 		RandomizeStatBonuses ();
@@ -406,6 +443,7 @@ public class Player : Unit {
 		// Adjusts maxHealth if the Health stat was increased.
 		if (addedHealth > 0) {
 			maxHealth += addedHealth;
+			setHUDmaxhealth (maxHealth);
 		}
 	}
 

@@ -27,7 +27,7 @@ public class HUDScript : MonoBehaviour {
 			HealthText.enabled = true;
 			HealthText.text = "HEALTH: " + Player.health;
 			SkillText.enabled = true;
-			SkillText.text = "PLAYER LEVEL: " + Player.level;
+			SkillText.text = "PLAYER LEVEL: " + Player.playerLevel;
 			RupeeText.enabled = true;
 			RupeeText.text = "RUPEES: " + Player.currency;
 		} else {
