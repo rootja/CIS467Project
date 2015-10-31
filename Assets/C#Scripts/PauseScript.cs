@@ -19,6 +19,7 @@ public class PauseScript : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        Time.timeScale = 1;
         /*resumeButton = resumeButton.GetComponent<Button>();
         optionsButton = optionsButton.GetComponent<Button>();
         exitButton = exitButton.GetComponent<Button>();
