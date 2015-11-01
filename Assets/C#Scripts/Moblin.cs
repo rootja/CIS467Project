@@ -95,10 +95,12 @@ public class Moblin : Unit {
 
 	// Update is called once per frame
 	void Update () {
-		numFrames++;
-		if (numFrames == FRAMES_PER_TURN) {
-			Move ();
-			numFrames = 0;
+		if (PauseScript.isKeysEnabled) {
+			numFrames++;
+			if (numFrames == FRAMES_PER_TURN) {
+				Move ();
+				numFrames = 0;
+			}
 		}
 	}
 }

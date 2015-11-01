@@ -217,8 +217,10 @@ public class Cynthia : Unit {
 
 	// Update is called once per frame
 	new void Update () {
-		base.Update ();
-		Move ();
+		if (PauseScript.isKeysEnabled) {
+			base.Update ();
+			Move ();
+		}
 	}
 
 	//sub function'd for inheritence compatibility

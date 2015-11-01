@@ -118,10 +118,12 @@ public class OptionsMenuScript : MonoBehaviour {
 	{
 		if (CheckKeyOverlap (kcTEMP, "up")) {
 			Player.keyUP = kcTEMP;
+			SuccessText.text = "SUCCESS: The 'UP' command was re-assigned to the key: " + kcTEMP;
 			SuccessText.enabled = true;
 			ErrorText.enabled = false;
 		} else {
 			SuccessText.enabled = false;
+			ErrorText.text = "ERROR: The 'UP' command is already assigned to a key other than: " + kcTEMP; 
 			ErrorText.enabled = true;
 		}
 	}
@@ -130,10 +132,12 @@ public class OptionsMenuScript : MonoBehaviour {
 	{
 		if (CheckKeyOverlap (kcTEMP, "down")) {
 			Player.keyDOWN = kcTEMP;
+			SuccessText.text = "SUCCESS: The 'DOWN' command was re-assigned to the key: " + kcTEMP;
 			SuccessText.enabled = true;
 			ErrorText.enabled = false;
 		} else {
 			SuccessText.enabled = false;
+			ErrorText.text = "ERROR: The 'DOWN' command is already assigned to a key other than: " + kcTEMP;
 			ErrorText.enabled = true;
 		}
 	}
@@ -142,10 +146,12 @@ public class OptionsMenuScript : MonoBehaviour {
 	{
 		if (CheckKeyOverlap (kcTEMP, "left")) {
 			Player.keyLEFT = kcTEMP;
+			SuccessText.text = "SUCCESS: The 'LEFT' command was re-assigned to the key: " + kcTEMP;
 			SuccessText.enabled = true;
 			ErrorText.enabled = false;
 		} else {
 			SuccessText.enabled = false;
+			ErrorText.text = "ERROR: The 'LEFT' command is already assigned to a key other than: " + kcTEMP;
 			ErrorText.enabled = true;
 		}
 	}
@@ -154,10 +160,12 @@ public class OptionsMenuScript : MonoBehaviour {
 	{
 		if (CheckKeyOverlap (kcTEMP, "right")) {
 			Player.keyRIGHT = kcTEMP;
+			SuccessText.text = "SUCCESS: The 'RIGHT' command was re-assigned to the key: " + kcTEMP;
 			SuccessText.enabled = true;
 			ErrorText.enabled = false;
 		} else {
 			SuccessText.enabled = false;
+			ErrorText.text = "ERROR: The 'RIGHT' command is already assigned to a key other than: " + kcTEMP;
 			ErrorText.enabled = true;
 		}
 	}
@@ -166,10 +174,12 @@ public class OptionsMenuScript : MonoBehaviour {
 	{
 		if (CheckKeyOverlap (kcTEMP, "move")) {
 			Player.keyMOVE = kcTEMP;
+			SuccessText.text = "SUCCESS: The 'MOVE' command was re-assigned to the key: " + kcTEMP;
 			SuccessText.enabled = true;
 			ErrorText.enabled = false;
 		} else {
 			SuccessText.enabled = false;
+			ErrorText.text = "ERROR: The 'MOVE' command is already assigned to a key other than: " + kcTEMP;
 			ErrorText.enabled = true;
 		}
 	}
@@ -178,10 +188,12 @@ public class OptionsMenuScript : MonoBehaviour {
 	{
 		if (CheckKeyOverlap (kcTEMP, "attack")) {
 			Player.keyATTACK = kcTEMP;
+			SuccessText.text = "SUCCESS: The 'ATTACK' command was re-assigned to the key: " + kcTEMP;
 			SuccessText.enabled = true;
 			ErrorText.enabled = false;
 		} else {
 			SuccessText.enabled = false;
+			ErrorText.text = "ERROR: The 'ATTACK' command is already assigned to a key other than: " + kcTEMP;
 			ErrorText.enabled = true;
 		}
 	}
@@ -190,10 +202,12 @@ public class OptionsMenuScript : MonoBehaviour {
 	{
 		if (CheckKeyOverlap (kcTEMP, "jump")) {
 			Player.keyCANCEL = kcTEMP;
+			SuccessText.text = "SUCCESS: The 'JUMP' command was re-assigned to the key: " + kcTEMP;
 			SuccessText.enabled = true;
 			ErrorText.enabled = false;
 		} else {
 			SuccessText.enabled = false;
+			ErrorText.text = "ERROR: The 'JUMP' command is already assigned to a key other than: " + kcTEMP;
 			ErrorText.enabled = true;
 		}
 	}
@@ -202,10 +216,12 @@ public class OptionsMenuScript : MonoBehaviour {
 	{
 		if (CheckKeyOverlap (kcTEMP, "pause")) {
 			Player.keyPAUSE = kcTEMP;
+			SuccessText.text = "SUCCESS: The 'PAUSE' command was re-assigned to the key: " + kcTEMP;
 			SuccessText.enabled = true;
 			ErrorText.enabled = false;
 		} else {
 			SuccessText.enabled = false;
+			ErrorText.text = "ERROR: The 'PAUSE' command is already assigned to a key other than: " + kcTEMP;
 			ErrorText.enabled = true;
 		}
 	}
