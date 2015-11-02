@@ -160,27 +160,6 @@ public class BoardManager : MonoBehaviour {
 
 	}
 
-	public void DrawPond(int rows, int columns, Vector3 position){
-		GameObject newTile;
-		Vector3 tilePosition;
-		for (int i = 0; i < rows; i++) {
-			tilePosition = new Vector3(position.x, position.y + i);
-			if(!filledPositions.Contains(tilePosition)){
-				newTile = Instantiate (waterTile, new Vector3(position.x, position.y + i), Quaternion.identity) as GameObject;
-				filledPositions.Add(newTile.transform.position);
-				newTile.transform.SetParent(boardTiles);
-			}
-			for(int j = 1; j < columns; j++){
-				tilePosition = new Vector3(position.x + (j % columns), position.y + (i % rows));
-				if(!filledPositions.Contains(tilePosition)){
-					newTile = Instantiate (waterTile, new Vector3(position.x + (j % columns), position.y + (i % rows)), Quaternion.identity) as GameObject;
-					newTile.transform.SetParent(boardTiles);
-					filledPositions.Add(newTile.transform.position);
-				}
-			}
-		}
-	}
-
 	void GenerateKeyItems(){
 		Vector3 position;
 		foreach (GameObject keyItem in keyItems) {
@@ -219,27 +198,6 @@ public class BoardManager : MonoBehaviour {
 					newTile.transform.SetParent(boardTiles);
 					filledPositions.Add(newTile.transform.position);
 				}
-			}
-		}
-	}
-
-	void GenerateKeyItems(){
-		Vector3 position;
-		foreach (GameObject keyItem in keyItems) {
-			// Values between 1 and the number of rows-1.
-			float x = (int)(Random.value * (rows-2)+1);
-			// Values between 1 and the number of columns-1.
-			float y = (int)(Random.value * (columns-2)+1);
-
-			// The position on the board to place the item.
-			Vector3 location = new Vector3(x,y);
-			
-			// Checks if the random position hasn't been added already.
-			if(filledPositions.Contains(location) == false){
-				// Add the position to the list.
-				filledPositions.Add(location);
-				// Instantiate the new item GameObject.
-				GameObject newItem = Instantiate (keyItem, location, Quaternion.identity) as GameObject;
 			}
 		}
 	}
