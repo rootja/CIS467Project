@@ -391,6 +391,12 @@ public class Player : Unit {
 		
 	}
 
+    	//Restart reloads the scene when called.
+    	private void Restart()
+    	{
+    	    Application.LoadLevel(Application.loadedLevel);
+    	}
+
 	// Methods for GridAura to disable movement
 //	public void stopWalk(){
 
@@ -506,6 +512,14 @@ public class Player : Unit {
 	}
 
 	void OnTriggerEnter2D(Collider2D collider){
+
+		//Check if the tag of the trigger collided with is Exit.
+        	if (other.tag == "Exit")
+       	 	{
+        	    //Invoke the Restart function to start the next level with a delay of 1 second.
+         	   Invoke("Restart", 0);
+        	}
+
 		if (collider.gameObject.tag.Equals ("Item")) {
 			// Adds the item to the player's inventory.
 			Item item = new Item(collider.gameObject.name);
