@@ -1,15 +1,10 @@
 fileFormatVersion: 2
 guid: 49a12f374506bd44ab621a3f93143db2
-timeCreated: 1443997368
+timeCreated: 1445213732
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - PausePanel: {fileID: 157396, guid: 61ac8ba59dbb72f47bc97a2b30a14ca0, type: 2}
-  - resumeButton: {instanceID: 0}
-  - optionsButton: {instanceID: 0}
-  - exitButton: {instanceID: 0}
-  - quitButton: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

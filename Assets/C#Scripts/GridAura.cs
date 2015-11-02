@@ -36,7 +36,7 @@ public class GridAura : MonoBehaviour {
 		animator = GetComponent<Animator>();
 	}
 
-	void OnTriggerStay(Collider2D other){
+	void OnTriggerStay2D(Collider2D other){
 
 		if (other.tag == "Player") {
 			clr = 3;
