@@ -69,6 +69,7 @@ MonoBehaviour:
   - {fileID: 119674, guid: 165a67011cd494b679262b463da15305, type: 2}
   ladder: {fileID: 152950, guid: 90ce2abc87ca645b58e0f629844fb897, type: 2}
   door: {fileID: 161908, guid: da5d537b6f380459988498ef3c69a05f, type: 2}
+  pitTile: {fileID: 148562, guid: 910bfb5656422064a8b54f717e7a6c05, type: 2}
   rows: 0
   columns: 0
 --- !u!1001 &100100000
@@ -122,6 +123,9 @@ Prefab:
       propertyPath: door
       value: 
       objectReference: {fileID: 161908, guid: da5d537b6f380459988498ef3c69a05f, type: 2}
+      propertyPath: pitTile
+      value: 
+      objectReference: {fileID: 148562, guid: 910bfb5656422064a8b54f717e7a6c05, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100838}

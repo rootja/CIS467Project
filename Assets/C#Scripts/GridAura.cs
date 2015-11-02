@@ -74,7 +74,7 @@ public class GridAura : MonoBehaviour {
 		}
 	}
 
-	void timeup () {
+    void timeup () {
 
 		Destroy(this.gameObject, 0.001F);
 
