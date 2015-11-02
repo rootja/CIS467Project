@@ -19,6 +19,9 @@ public class BoardManager : MonoBehaviour {
 
 	private Transform boardTiles;
 	private Transform boardItems;
+
+    //List of all possible board positions
+    private List<Vector3> boardPositions = new List<Vector3>();
 	
 	public void SetupBoard(int rows = 1, int columns = 1){
 
@@ -32,10 +35,73 @@ public class BoardManager : MonoBehaviour {
 			this.columns = columns;
 		else
 			this.columns = 1;
-	}
+
+        /* This section includes the board fix for the ghost instance
+        boardTiles = new GameObject("BoardTiles").transform;
+
+        // Assigns values to the column and row variables.
+        //SetupBoard(9, 9);
+
+        // Adds the floor tiles to the game board.
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                // Creates a new tile game object at position (i,j).
+                GameObject newTile = Instantiate(floorTile, new Vector2(i, j), Quaternion.identity) as GameObject;
+
+                // Adds the new tile to GameObject called 'BoardTiles' to help reduce clutter in the
+                // hierarchy.
+                newTile.transform.SetParent(boardTiles);
+
+                //Adds the board location to the list
+                //boardPositions.Add(new Vector3(i, j, -1f));
+            }
+        }
+
+        // Adds the wall tiles to the game board.
+        for (int i = -1; i <= rows; i++)
+        {
+            for (int j = -1; j <= columns; j++)
+            {
+                if (i == -1 || i == rows || j == -1 || j == columns)
+                {
+                    GameObject newTile = Instantiate(wallTile, new Vector2(i, j), Quaternion.identity) as GameObject;
+                    newTile.transform.SetParent(boardTiles);
+                }
+            }
+        }
+
+        // Adds a ladder right corner of the moveable section of the board.
+        Instantiate(ladder, new Vector3(rows - 1, columns - 1, 0), Quaternion.identity);
+
+        // May generate items up to the specified number and place them on the board.
+        GenerateItems(10); 
+        */
+    }
+
+    void SetupList()
+    {
+        //Clear previous list
+        boardPositions.Clear();
+
+        // Adds tiles to the board positions list.
+        for (int i = 1; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                if (j == 8)
+                    break;
+                
+                //Adds the board location to the list
+                boardPositions.Add(new Vector3(i, j, -1f));
+            }
+        }
+    }
 	
+    
 	// Use this for initialization
-	void Start () {
+    void Start () {
 
 		boardTiles = new GameObject ("BoardTiles").transform;
 
@@ -51,6 +117,9 @@ public class BoardManager : MonoBehaviour {
 				// Adds the new tile to GameObject called 'BoardTiles' to help reduce clutter in the
 				// hierarchy.
 				newTile.transform.SetParent(boardTiles);
+
+                //Adds the board location to the list
+                //boardPositions.Add(new Vector3(i, j, -1f));
 			}
 		}
 
@@ -65,12 +134,13 @@ public class BoardManager : MonoBehaviour {
 		}
 
 		// Adds a ladder right corner of the moveable section of the board.
-		//Instantiate (ladder, new Vector3 (rows-1, columns-1, 0), Quaternion.identity);
+		Instantiate (ladder, new Vector3 (rows-1, columns-1, 0), Quaternion.identity);
 
 		// May generate items up to the specified number and place them on the board.
 		GenerateItems (10);
 
 	}
+    
 
 	// Generates an item and places it at some random position on the board. Note: The floor lining the wall
 	// will not have items in it. This is so that the player doesn't get blocked when we add obstacles.
@@ -114,10 +184,16 @@ public class BoardManager : MonoBehaviour {
 
     public void LevelSelector(int level)
     {
-        //Sets up a board with walls and grass tiles
-        //Start();
+        //Un comment this when using the ghost instance board fix above
+        //SetupBoard(9, 9);
 
-        //sets the board to the level it corresponds to
+        SetupList();
+
+        LayoutTilesAtRandom(wallTile, 5, 10);
+
+        LayoutTilesAtRandom(pitTile, 1, 4);
+
+   /*     //sets the board to the level it corresponds to
         if (level == 1)
             LoadMap1();
         else if (level == 2)
@@ -137,10 +213,10 @@ public class BoardManager : MonoBehaviour {
         else if (level == 9)
             LoadMap9();
         else if (level == 10)
-            LoadMap10();
+            LoadMap10(); */
     }
 
-    //Create an empty room with a door in the north wall
+  /*  //Create an empty room with a door in the north wall
     void LoadMap1()
     {
         //Puts a ladder by the north wall
@@ -590,6 +666,30 @@ public class BoardManager : MonoBehaviour {
         newTile.transform.SetParent(boardTiles);
         newTile = Instantiate(wallTile, new Vector3(7, 1, -1), Quaternion.identity) as GameObject;
         newTile.transform.SetParent(boardTiles);
+    }
+    */
+
+    Vector3 GetRandomPosition()
+    {
+        int randomIndex = Random.Range(0, boardPositions.Count);
+
+        Vector3 randomPosition = boardPositions[randomIndex];
+
+        boardPositions.RemoveAt(randomIndex);
+
+        return randomPosition;        
+    }
+
+    void LayoutTilesAtRandom(GameObject tile, int min, int max)
+    {
+        int objectCounter = Random.Range(min, max + 1);
+
+        for (int i = 0; i < objectCounter; i++)
+        {
+            Vector3 randomPosition = GetRandomPosition();
+
+            Instantiate(tile, randomPosition, Quaternion.identity);
+        }
     }
 
     // Update is called once per frame

@@ -25,7 +25,8 @@ public class GameManager : MonoBehaviour {
         else if (instance != this)
 
             //Then destroy this
-            Destroy(gameObject);
+            Destroy(gameObject); 
+        
 
         //Sets this to not be destroyed when reloading scene
         DontDestroyOnLoad(gameObject);
