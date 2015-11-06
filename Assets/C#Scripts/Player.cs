@@ -150,7 +150,7 @@ public class Player : Unit {
 		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
 			endPosition = new Vector3 (startPosition.x, startPosition.y - movement);
 			animator.Play ("PlayerForwardIdle");
-		}
+		} 
 		
 		BoxCollider2D boxCollider = this.GetComponent<BoxCollider2D> ();
 		
@@ -158,11 +158,44 @@ public class Player : Unit {
 		
 		RaycastHit2D hit = Physics2D.Linecast (startPosition, endPosition, blockingLayer);
 		RaycastHit2D hitUnit = Physics2D.Linecast (startPosition, endPosition, unitsLayer);
-		
+
 		boxCollider.enabled = true;
 
 		if (!hit && !hitUnit) {
 			this.transform.position = endPosition;
+		} 
+		if (hitUnit) {
+			AttackEnemy();
+			if (hitUnit.collider.gameObject.tag.Equals ("Enemy")) {
+				string enemyType;
+				if(hitUnit.collider.gameObject.name.Contains("(Clone)")){
+					// Gets rid of the (Clone) in the object name.
+					enemyType = hitUnit.collider.gameObject.name.Substring(0,hitUnit.collider.gameObject.name.Length - 7);
+				}
+				else{
+					enemyType = hitUnit.collider.gameObject.name;
+				}
+				switch(enemyType){
+				case "Cynthia":
+					CalculateDamageDealt(hitUnit.collider.gameObject.GetComponent<Cynthia>());
+					if(hitUnit.collider.gameObject.GetComponent<Cynthia>().Health <= 0){
+						DefeatEnemy(hitUnit.collider.gameObject.GetComponent<Cynthia>());
+					}
+					if(hitUnit.collider.gameObject.GetComponent<Cynthia>().Health <= 0){
+						Destroy (hitUnit.collider.gameObject);
+					}
+					break;
+				case "Moblin":
+					CalculateDamageDealt(hitUnit.collider.gameObject.GetComponent<Moblin>());
+					if(hitUnit.collider.gameObject.GetComponent<Moblin>().Health <= 0){
+						DefeatEnemy(hitUnit.collider.gameObject.GetComponent<Moblin>());
+					}
+					if(hitUnit.collider.gameObject.GetComponent<Moblin>().Health <= 0){
+						Destroy (hitUnit.collider.gameObject);
+					}
+					break;
+				}
+			}
 		}
 	}
 
@@ -229,7 +262,7 @@ public class Player : Unit {
 			}
 			// Attacks the target grid with the main weapon (sword?)
 			if (Input.GetKeyDown (keyATTACK)) {
-				attack (x,y);
+				AttackEnemy ();
 			}
 			// Activates item in slot 2
 			if (Input.GetKeyDown (keyITEM)) {
@@ -272,23 +305,6 @@ public class Player : Unit {
 			if ( (x == 0) & (y == 1) ) {
 				animator.Play ("PlayerBackwardIdle");
 			}
-			
-			// Checks if facing up-left.
-			if ( (x == -1) & (y == 1) ) {
-				//animator.Play ("PlayerUpLeftIdle");
-			} 
-			// Checks if facing up-right.
-			if ( (x == 1) & (y == 1) ) {
-				//animator.Play ("PlayerUpRightIdle");
-			} 
-			// Checks if facing down-left.
-			if ( (x == -1) & (y == -1) ) {
-				//animator.Play ("PlayerDownLeftIdle");
-			} 
-			// Checks if facing down-right.
-			if ( (x == -1) & (y == 1) ) {
-				//animator.Play ("PlayerDownRightIdle");
-			} 
 		}
 		
 		// Not My Turn State
@@ -326,10 +342,10 @@ public class Player : Unit {
 
 	// Update is called once per frame
 	new void Update () {
-		base.Update ();
-		Move ();
-//		CanMove (Input.GetKey(KeyCode.D));
-		currentPosition = this.transform.position;
+//		base.Update ();
+//		Move ();
+		CanMove (Input.GetKey(KeyCode.D));
+//		currentPosition = this.transform.position;
 	}
 
 	//moves the character occording to the inputs
@@ -379,12 +395,22 @@ public class Player : Unit {
 	}
 
 	// attacks the target area with the basic attack
-	void attack (int x, int y) {
-		
+	void AttackEnemy () {
+		if (Input.GetKeyDown (KeyCode.RightArrow)) {
+			animator.Play ("PlayerSwordRight");
+		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+			animator.Play ("PlayerSwordLeft");
+		} else if (Input.GetKeyDown (KeyCode.UpArrow)) {
+			animator.Play ("PlayerSwordBackward");
+		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
+			animator.Play ("PlayerSwordForward");
+		} 
+
+
 		state = 3;
 		
 		// attack target location
-		Vector3 goal = new Vector3((this.transform.position.x + x),(this.transform.position.y + y), 0);
+		//Vector3 goal = new Vector3((this.transform.position.x + x),(this.transform.position.y + y), 0);
 
 		state = 1;
 		return;
@@ -412,8 +438,8 @@ public class Player : Unit {
 
 	// Randomizes the stat bonuses when leveling.
 	void RandomizeStatBonuses() {
-		// A maximum of 3 stat bonuses can occur when leveling.
-		int maxBonuses = 3;
+		// A maximum of 4 stat bonuses can occur when leveling.
+		int maxBonuses = 4;
 
 		int index;
 		for(int i = 0; i < maxBonuses; i++){
@@ -470,43 +496,6 @@ public class Player : Unit {
 			while(this.Experience >= nextLevel){
 				LevelUp();
 				nextLevel = (int) Mathf.Pow (this.Level, 2) * EXPERIENCE_FACTOR;
-			}
-		}
-	}
-
-	void OnCollisionEnter2D(Collision2D collider) {
-		if (collider.gameObject.tag.Equals ("Enemy")) {
-			string enemyType;
-			if(collider.gameObject.name.Contains("(Clone)")){
-				// Gets rid of the (Clone) in the object name.
-				enemyType = collider.gameObject.name.Substring(0,collider.gameObject.name.Length - 7);
-			}
-			else{
-				enemyType = collider.gameObject.name;
-			}
-			switch(enemyType){
-			case "Cynthia":
-				if(Input.GetKeyUp(KeyCode.P)) {
-					CalculateDamageDealt(collider.gameObject.GetComponent<Cynthia>());
-				}
-				if(collider.gameObject.GetComponent<Cynthia>().Health <= 0){
-					DefeatEnemy(collider.gameObject.GetComponent<Cynthia>());
-				}
-				if(collider.gameObject.GetComponent<Cynthia>().Health <= 0){
-					Destroy (collider.gameObject);
-				}
-				break;
-			case "Moblin":
-				if(Input.GetKeyUp(KeyCode.P)) {
-					CalculateDamageDealt(collider.gameObject.GetComponent<Moblin>());
-				}
-				if(collider.gameObject.GetComponent<Moblin>().Health <= 0){
-					DefeatEnemy(collider.gameObject.GetComponent<Moblin>());
-				}
-				if(collider.gameObject.GetComponent<Moblin>().Health <= 0){
-					Destroy (collider.gameObject);
-				}
-				break;
 			}
 		}
 	}

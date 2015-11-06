@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8df9984cdf5f4e7ebab20e3e2f0565d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 143324, guid: dbaef6d91f6014c48a7634cc7353fd5f, type: 2}
+  player: {fileID: 113058, guid: dbaef6d91f6014c48a7634cc7353fd5f, type: 2}
   cynthia: {fileID: 127472, guid: 9a1c0250669bf57478a2d36c4183ac74, type: 2}
 --- !u!114 &11480756
 MonoBehaviour:
@@ -67,11 +67,9 @@ MonoBehaviour:
   enemies:
   - {fileID: 127472, guid: 9a1c0250669bf57478a2d36c4183ac74, type: 2}
   - {fileID: 119674, guid: 165a67011cd494b679262b463da15305, type: 2}
-  ladder: {fileID: 152950, guid: 90ce2abc87ca645b58e0f629844fb897, type: 2}
-  door: {fileID: 161908, guid: da5d537b6f380459988498ef3c69a05f, type: 2}
   pitTile: {fileID: 148562, guid: 910bfb5656422064a8b54f717e7a6c05, type: 2}
-  rows: 0
-  columns: 0
+  items: []
+  ladder: {fileID: 152950, guid: 90ce2abc87ca645b58e0f629844fb897, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -123,9 +121,10 @@ Prefab:
       propertyPath: door
       value: 
       objectReference: {fileID: 161908, guid: da5d537b6f380459988498ef3c69a05f, type: 2}
-      propertyPath: pitTile
+    - target: {fileID: 0}
+      propertyPath: player
       value: 
-      objectReference: {fileID: 148562, guid: 910bfb5656422064a8b54f717e7a6c05, type: 2}
+      objectReference: {fileID: 113058, guid: dbaef6d91f6014c48a7634cc7353fd5f, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100838}
