@@ -9,16 +9,14 @@ public class BoardManager : MonoBehaviour {
 	public GameObject floorTile;
 	public GameObject wallTile;
 	public GameObject waterTile;
+	public GameObject pitTile;
 
 	public GameObject[] basicItems;
 	public GameObject[] keyItems;
 	public GameObject[] enemies;
 
-    public GameObject pitTile;
-
-    public GameObject[] items;
-
 	public GameObject ladder;
+	public GameObject lockedDoor;
 	
 	int rows;
 	int columns;
@@ -33,8 +31,8 @@ public class BoardManager : MonoBehaviour {
 	
 	public void SetupBoard(){
 
-		int maxBoardHeight = 20;
-		int maxBoardWidth = 20;
+		int maxBoardHeight = 14;
+		int maxBoardWidth = 14;
 		int minDimension = 6;
 
 		rows = (int)(Random.value * maxBoardHeight) + minDimension;
@@ -100,13 +98,14 @@ public class BoardManager : MonoBehaviour {
 
 		// Adds a ladder right corner of the moveable section of the board.
 		Instantiate (ladder, new Vector3 (rows-1, columns-1), Quaternion.identity);
+		Instantiate (lockedDoor, new Vector3 (rows-1, columns-1), Quaternion.identity);
 
 		SpawnEnemies(0, 1);
-		SpawnEnemies(1, 3);
+		SpawnEnemies(1, 4);
 
 		GenerateKeyItems ();
 		// May generate items up to the specified number and place them on the board.
-		GenerateBasicItems (6);
+		GenerateBasicItems ((rows+columns)/3);
 
 	}
 

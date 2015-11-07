@@ -108,6 +108,32 @@ public class Moblin : Unit {
 		if (!hit && !hitUnit) {
 			this.transform.position = endPosition;
 		}
+		if (hitUnit) {
+			AttackPlayer(hitUnit, direction);
+		}
+	}
+
+	void AttackPlayer(RaycastHit2D hitPlayer, int movementDirection){
+		if (hitPlayer.collider.gameObject.tag.Equals ("Player")) {
+			switch (movementDirection) {
+			case 0:
+				moblinAnimator.SetTrigger ("MoblinAttackForward");
+				break;
+			case 1:
+				moblinAnimator.SetTrigger ("MoblinAttackBackward");
+				break;
+			case 2:
+				moblinAnimator.SetTrigger ("MoblinAttackRight");
+				break;
+			case 3:
+				moblinAnimator.SetTrigger ("MoblinAttackLeft");
+				break;
+			}
+			CalculateDamageDealt (hitPlayer.collider.gameObject.GetComponent<Player> ());
+			if (hitPlayer.collider.gameObject.GetComponent<Player> ().Health <= 0) {
+				Destroy (hitPlayer.collider.gameObject);
+			}
+		}
 	}
 
 	// Update is called once per frame

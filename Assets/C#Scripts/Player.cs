@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 using System.Collections.Generic;
 
 public class Player : Unit {
-
+	
 	/*
 	 * Static Input Keys
 	 * 4 Directional Keys (keyUP, keyDOWN, keyLEFT, keyRIGHT)
@@ -36,7 +36,7 @@ public class Player : Unit {
 	// Closes the program immediately, saving any states if neccesary
 	public static KeyCode keyEXIT = KeyCode.Return;
 
-	// The initial amount of experience needed to level up.
+	// The multiplier for calculating level experience requirements.
 	const int EXPERIENCE_FACTOR = 10;
 
 	//These variables are accessed by the HUD
@@ -92,10 +92,11 @@ public class Player : Unit {
 	public static Vector3 currentPosition;
 
 	public void InitPlayer(string playerName = "Link"){
+
 		myName = playerName;
 
 		this.Level = 1;
-		this.Health = 3;
+		this.Health = 4;
 		this.Attack = 1;
 		this.Defense = 1;
 		this.Speed = 1;
@@ -133,10 +134,9 @@ public class Player : Unit {
 	public void CanMove(bool isJump = false){
 		Vector3 startPosition = this.transform.position;
 		Vector3 endPosition = this.transform.position;
-		
-		int movement;
+
 		// If jump is true, then the movement space is 2, otherwise the player can move 1 space.
-		movement = isJump ? 2 : 1;
+		int movement = isJump ? 2 : 1;
 
 		if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			endPosition = new Vector3 (startPosition.x + movement, startPosition.y);
@@ -163,39 +163,10 @@ public class Player : Unit {
 
 		if (!hit && !hitUnit) {
 			this.transform.position = endPosition;
-		} 
-		if (hitUnit) {
-			AttackEnemy();
-			if (hitUnit.collider.gameObject.tag.Equals ("Enemy")) {
-				string enemyType;
-				if(hitUnit.collider.gameObject.name.Contains("(Clone)")){
-					// Gets rid of the (Clone) in the object name.
-					enemyType = hitUnit.collider.gameObject.name.Substring(0,hitUnit.collider.gameObject.name.Length - 7);
-				}
-				else{
-					enemyType = hitUnit.collider.gameObject.name;
-				}
-				switch(enemyType){
-				case "Cynthia":
-					CalculateDamageDealt(hitUnit.collider.gameObject.GetComponent<Cynthia>());
-					if(hitUnit.collider.gameObject.GetComponent<Cynthia>().Health <= 0){
-						DefeatEnemy(hitUnit.collider.gameObject.GetComponent<Cynthia>());
-					}
-					if(hitUnit.collider.gameObject.GetComponent<Cynthia>().Health <= 0){
-						Destroy (hitUnit.collider.gameObject);
-					}
-					break;
-				case "Moblin":
-					CalculateDamageDealt(hitUnit.collider.gameObject.GetComponent<Moblin>());
-					if(hitUnit.collider.gameObject.GetComponent<Moblin>().Health <= 0){
-						DefeatEnemy(hitUnit.collider.gameObject.GetComponent<Moblin>());
-					}
-					if(hitUnit.collider.gameObject.GetComponent<Moblin>().Health <= 0){
-						Destroy (hitUnit.collider.gameObject);
-					}
-					break;
-				}
-			}
+		} else if (hitUnit) {
+			AttackEnemy (hitUnit);
+		} else if (hit) {
+			UnlockDoor(hit);
 		}
 	}
 
@@ -262,7 +233,7 @@ public class Player : Unit {
 			}
 			// Attacks the target grid with the main weapon (sword?)
 			if (Input.GetKeyDown (keyATTACK)) {
-				AttackEnemy ();
+				//AttackEnemy ();
 			}
 			// Activates item in slot 2
 			if (Input.GetKeyDown (keyITEM)) {
@@ -345,6 +316,8 @@ public class Player : Unit {
 //		base.Update ();
 //		Move ();
 		CanMove (Input.GetKey(KeyCode.D));
+		// Check each frame if the player's health has changed.
+		setHUDhealth (this.Health);
 //		currentPosition = this.transform.position;
 	}
 
@@ -395,22 +368,45 @@ public class Player : Unit {
 	}
 
 	// attacks the target area with the basic attack
-	void AttackEnemy () {
-		if (Input.GetKeyDown (KeyCode.RightArrow)) {
-			animator.Play ("PlayerSwordRight");
-		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-			animator.Play ("PlayerSwordLeft");
-		} else if (Input.GetKeyDown (KeyCode.UpArrow)) {
-			animator.Play ("PlayerSwordBackward");
-		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			animator.Play ("PlayerSwordForward");
-		} 
+	void AttackEnemy (RaycastHit2D hitUnit) {
+		if (hitUnit.collider.gameObject.tag.Equals ("Enemy")) {
+			if (Input.GetKeyDown (KeyCode.RightArrow)) {
+				animator.SetTrigger ("PlayerSwordRight");
+			} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+				animator.SetTrigger ("PlayerSwordLeft");
+			} else if (Input.GetKeyDown (KeyCode.UpArrow)) {
+				animator.SetTrigger ("PlayerSwordBackward");
+			} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
+				animator.SetTrigger ("PlayerSwordForward");
+			} 
+			string enemyType;
+			if(hitUnit.collider.gameObject.name.Contains("(Clone)")){
+				// Gets rid of the (Clone) in the object name.
+				enemyType = hitUnit.collider.gameObject.name.Substring(0,hitUnit.collider.gameObject.name.Length - 7);
+			}
+			else{
+				enemyType = hitUnit.collider.gameObject.name;
+			}
+			switch(enemyType){
+			case "Cynthia":
+				CalculateDamageDealt(hitUnit.collider.gameObject.GetComponent<Cynthia>());
+				if(hitUnit.collider.gameObject.GetComponent<Cynthia>().Health <= 0){
+					DefeatEnemy(hitUnit.collider.gameObject.GetComponent<Cynthia>());
+					Destroy (hitUnit.collider.gameObject);
+				}
+				break;
+			case "Moblin":
+				CalculateDamageDealt(hitUnit.collider.gameObject.GetComponent<Moblin>());
+				if(hitUnit.collider.gameObject.GetComponent<Moblin>().Health <= 0){
+					DefeatEnemy(hitUnit.collider.gameObject.GetComponent<Moblin>());
+					Destroy (hitUnit.collider.gameObject);
+				}
+				break;
+			}
+		}
 
 
 		state = 3;
-		
-		// attack target location
-		//Vector3 goal = new Vector3((this.transform.position.x + x),(this.transform.position.y + y), 0);
 
 		state = 1;
 		return;
@@ -540,5 +536,21 @@ public class Player : Unit {
 		// than 1.
 		int damage = (this.Attack > enemy.Defense) ? this.Attack - enemy.Defense : 1;
 		enemy.Health -= damage;
+	}
+
+	public void UnlockDoor(RaycastHit2D door){
+		bool hasKey = false;
+		Item key = null;
+		foreach (Item item in Inventory) {
+			if(item.Name.Equals("Key")){
+				hasKey = true;
+				key = item;
+			}
+		}
+
+		if (door.collider.gameObject.name == "Door(Clone)" && hasKey) {
+			this.Inventory.Remove(key);
+			Destroy (door.collider.gameObject);
+		}
 	}
 }
