@@ -28,7 +28,7 @@ public class Moblin : Unit {
 
 	public void CalculateStats(int level, bool isHardMode){
 		this.Level = level;
-		this.Health = 2;
+		this.Health = 3;
 		this.Attack = 1;
 		this.Defense = 1;
 		this.Speed = 1;

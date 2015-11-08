@@ -45,8 +45,8 @@ public class BoardManager : MonoBehaviour {
         {
             for (int j = 0; j < columns; j++)
             {
-                // Creates a new tile game object at position (i,j).
-                GameObject newTile = Instantiate(floorTile, new Vector2(i, j), Quaternion.identity) as GameObject;
+                // Creates a new tile game object at position (j,i).
+                GameObject newTile = Instantiate(floorTile, new Vector2(j, i), Quaternion.identity) as GameObject;
 
                 // Adds the new tile to GameObject called 'BoardTiles' to help reduce clutter in the
                 // hierarchy.
@@ -61,7 +61,7 @@ public class BoardManager : MonoBehaviour {
             {
                 if (i < 0 || i >= rows || j < 0 || j >= columns)
                 {
-                    GameObject newTile = Instantiate(wallTile, new Vector2(i, j), Quaternion.identity) as GameObject;
+                    GameObject newTile = Instantiate(wallTile, new Vector2(j, i), Quaternion.identity) as GameObject;
                     newTile.transform.SetParent(boardTiles);
                 }
             }
@@ -97,25 +97,27 @@ public class BoardManager : MonoBehaviour {
 		filledPositions = new List<Vector3> ();
 
 		// Adds a ladder right corner of the moveable section of the board.
-		Instantiate (ladder, new Vector3 (rows-1, columns-1), Quaternion.identity);
-		Instantiate (lockedDoor, new Vector3 (rows-1, columns-1), Quaternion.identity);
+		Instantiate (ladder, new Vector3 (columns-1, rows-1), Quaternion.identity);
+		Instantiate (lockedDoor, new Vector3 (columns-1, rows-1), Quaternion.identity);
+
+		GenerateKeyItems ();
 
 		SpawnEnemies(0, 1);
 		SpawnEnemies(1, 4);
 
-		GenerateKeyItems ();
 		// May generate items up to the specified number and place them on the board.
 		GenerateBasicItems ((rows+columns)/3);
 
+		GenerateWater ();
 	}
 
 	void GenerateKeyItems(){
 		Vector3 position;
 		foreach (GameObject keyItem in keyItems) {
 			// Values between 1 and the number of rows-1.
-			float x = (int)(Random.value * (rows-2)+1);
+			float x = (int)(Random.value * (columns-2)+1);
 			// Values between 1 and the number of columns-1.
-			float y = (int)(Random.value * (columns-2)+1);
+			float y = (int)(Random.value * (rows-2)+1);
 
 			// The position on the board to place the item.
 			Vector3 location = new Vector3(x,y);
@@ -136,14 +138,14 @@ public class BoardManager : MonoBehaviour {
 		for (int i = 0; i < rows; i++) {
 			tilePosition = new Vector3(position.x, position.y + i);
 			if(!filledPositions.Contains(tilePosition)){
-				newTile = Instantiate (waterTile, new Vector3(position.x, position.y + i), Quaternion.identity) as GameObject;
+				newTile = Instantiate (waterTile, new Vector3(tilePosition.x, tilePosition.y), Quaternion.identity) as GameObject;
 				filledPositions.Add(newTile.transform.position);
 				newTile.transform.SetParent(boardTiles);
 			}
 			for(int j = 1; j < columns; j++){
-				tilePosition = new Vector3(position.x + (j % columns), position.y + (i % rows));
+				tilePosition = new Vector3(position.x + j, position.y + i);
 				if(!filledPositions.Contains(tilePosition)){
-					newTile = Instantiate (waterTile, new Vector3(position.x + (j % columns), position.y + (i % rows)), Quaternion.identity) as GameObject;
+					newTile = Instantiate (waterTile, new Vector3(tilePosition.x, tilePosition.y), Quaternion.identity) as GameObject;
 					newTile.transform.SetParent(boardTiles);
 					filledPositions.Add(newTile.transform.position);
 				}
@@ -160,9 +162,9 @@ public class BoardManager : MonoBehaviour {
 		// Adds items at random positions on the board.
 		for (int i = 0; i < numberOfItems; i++) {
 			// Values between 1 and the number of rows-1.
-			float x = (int)(Random.value * (rows-2)+1);
+			float x = (int)(Random.value * (columns-2)+1);
 			// Values between 1 and the number of columns-1.
-			float y = (int)(Random.value * (columns-2)+1);
+			float y = (int)(Random.value * (rows-2)+1);
 
 			// The position on the board to place the item.
 			Vector3 location = new Vector3(x,y);
@@ -188,8 +190,8 @@ public class BoardManager : MonoBehaviour {
 
 	void SpawnEnemies (int type, int numToSpawn){
 		for(int i = 0; i < numToSpawn; i++) {
-			float x = (int)(Random.value * rows-2) + 1;
-			float y = (int)(Random.value * columns-2) + 1;
+			float x = (int)(Random.value * columns-2) + 1;
+			float y = (int)(Random.value * rows-2) + 1;
 			Vector3 position = new Vector3(x,y);
 			if(!filledPositions.Contains(position)) {
 				Instantiate(enemies[type], position, Quaternion.identity);
@@ -235,5 +237,13 @@ public class BoardManager : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
+	}
+
+	void GenerateWater(){
+		for (int i = 0; i < (rows+columns)/6; i++) {
+			float x = (int)(Random.value * (columns-2) + 1);
+			float y = (int)(Random.value * (rows-2) + 1);
+			DrawPond (1, 1, new Vector3 (x, y));
+		}
 	}
 }
