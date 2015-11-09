@@ -11,6 +11,8 @@ public class BoardManager : MonoBehaviour {
 	public GameObject waterTile;
 	public GameObject pitTile;
 
+	public GameObject[] rockTiles;
+	
 	public GameObject[] basicItems;
 	public GameObject[] keyItems;
 	public GameObject[] enemies;
@@ -109,6 +111,7 @@ public class BoardManager : MonoBehaviour {
 		GenerateBasicItems ((rows+columns)/3);
 
 		GenerateWater ();
+		GenerateRocks ();
 	}
 
 	void GenerateKeyItems(){
@@ -244,6 +247,17 @@ public class BoardManager : MonoBehaviour {
 			float x = (int)(Random.value * (columns-2) + 1);
 			float y = (int)(Random.value * (rows-2) + 1);
 			DrawPond (1, 1, new Vector3 (x, y));
+		}
+	}
+
+	void GenerateRocks(){
+		for (int i = 0; i < (rows+columns)/6; i++) {
+			float x = (int)(Random.value * (columns-2) + 1);
+			float y = (int)(Random.value * (rows-2) + 1);
+			if(!filledPositions.Contains(new Vector3(x,y))) {
+				Instantiate(rockTiles[(int)(Random.value * rockTiles.Length)], new Vector3(x,y),Quaternion.identity);
+				filledPositions.Add (new Vector3(x,y));
+			}
 		}
 	}
 }
