@@ -91,7 +91,15 @@ public class Player : Unit {
 
 	public static Vector3 currentPosition;
 
+	public static Player player = null;
+
 	public void InitPlayer(string playerName = "Link"){
+
+		//DontDestroyOnLoad (this.gameObject);
+
+		if (player == null) {
+			player = this;
+		}
 
 		myName = playerName;
 
@@ -315,6 +323,7 @@ public class Player : Unit {
 	new void Update () {
 //		base.Update ();
 //		Move ();
+
 		CanMove (Input.GetKey(KeyCode.D));
 		// Check each frame if the player's health has changed.
 		setHUDhealth (this.Health);

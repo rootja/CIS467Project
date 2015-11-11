@@ -4,7 +4,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
 	public GameObject player;
-	public GameObject cynthia;
+	//public GameObject cynthia;
     //public BoardManager boardScript;
     private int level = 1;
 

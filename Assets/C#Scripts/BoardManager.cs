@@ -110,8 +110,11 @@ public class BoardManager : MonoBehaviour {
 		// May generate items up to the specified number and place them on the board.
 		GenerateBasicItems ((rows+columns)/3);
 
-		GenerateWater ();
-		GenerateRocks ();
+		GenerateBlockingObjects (waterTile, 0.03F);
+		for (int i = 0; i < rockTiles.Length; i++) {
+			GenerateBlockingObjects (rockTiles [(int)(Random.value * rockTiles.Length)], 0.01F);
+		}
+		GenerateBlockingObjects (pitTile, 0.01F);
 	}
 
 	void GenerateKeyItems(){
@@ -242,20 +245,12 @@ public class BoardManager : MonoBehaviour {
 
 	}
 
-	void GenerateWater(){
-		for (int i = 0; i < (rows+columns)/6; i++) {
-			float x = (int)(Random.value * (columns-2) + 1);
-			float y = (int)(Random.value * (rows-2) + 1);
-			DrawPond (1, 1, new Vector3 (x, y));
-		}
-	}
-
-	void GenerateRocks(){
-		for (int i = 0; i < (rows+columns)/6; i++) {
+	void GenerateBlockingObjects(GameObject blockingObject, float frequency){
+		for (int i = 0; i < (rows * columns) * frequency; i++) {
 			float x = (int)(Random.value * (columns-2) + 1);
 			float y = (int)(Random.value * (rows-2) + 1);
 			if(!filledPositions.Contains(new Vector3(x,y))) {
-				Instantiate(rockTiles[(int)(Random.value * rockTiles.Length)], new Vector3(x,y),Quaternion.identity);
+				Instantiate(blockingObject, new Vector3(x,y),Quaternion.identity);
 				filledPositions.Add (new Vector3(x,y));
 			}
 		}

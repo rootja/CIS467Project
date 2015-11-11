@@ -47,6 +47,10 @@ MonoBehaviour:
   rockTiles:
   - {fileID: 185332, guid: b78b67c0399024b50bfdbee3100ce06c, type: 2}
   - {fileID: 181528, guid: 9e59b862387d746ee91c4be822f97ef0, type: 2}
+  - {fileID: 156828, guid: 4a86559da0c26406087343d6063cca41, type: 2}
+  - {fileID: 117386, guid: 2d02cadc1e3124a17b50fe9b73a7056e, type: 2}
+  - {fileID: 164472, guid: b6bd1ec60fc074518a86ae3b7a920b6d, type: 2}
+  - {fileID: 186454, guid: a7448839cee2141a8a7f96531f96ed18, type: 2}
   basicItems:
   - {fileID: 105058, guid: a60f6bba7b45545eeb337ea8af3e19e0, type: 2}
   - {fileID: 134680, guid: 9d6f330e07f3b4f08ade92e23ae55b5e, type: 2}
@@ -72,14 +76,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 153116, guid: dbaef6d91f6014c48a7634cc7353fd5f, type: 2}
-  cynthia: {fileID: 127472, guid: 9a1c0250669bf57478a2d36c4183ac74, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: rockTiles.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 153116, guid: dbaef6d91f6014c48a7634cc7353fd5f, type: 2}
+    - target: {fileID: 0}
+      propertyPath: rockTiles.Array.data[2]
+      value: 
+      objectReference: {fileID: 156828, guid: 4a86559da0c26406087343d6063cca41, type: 2}
+    - target: {fileID: 0}
+      propertyPath: rockTiles.Array.data[3]
+      value: 
+      objectReference: {fileID: 117386, guid: 2d02cadc1e3124a17b50fe9b73a7056e, type: 2}
+    - target: {fileID: 0}
+      propertyPath: rockTiles.Array.data[4]
+      value: 
+      objectReference: {fileID: 164472, guid: b6bd1ec60fc074518a86ae3b7a920b6d, type: 2}
+    - target: {fileID: 0}
+      propertyPath: rockTiles.Array.data[5]
+      value: 
+      objectReference: {fileID: 186454, guid: a7448839cee2141a8a7f96531f96ed18, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 130524}
