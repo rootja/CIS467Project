@@ -68,7 +68,7 @@ public class Player : Unit {
 	public string myName;
 
 	int[] stats;
-
+	
 	public static void setHUDhealth(int pHealth)
 	{
 		health = pHealth;
@@ -172,7 +172,12 @@ public class Player : Unit {
 		if (!hit && !hitUnit) {
 			this.transform.position = endPosition;
 		} else if (hitUnit) {
-			AttackEnemy (hitUnit);
+			if(Input.GetKey(keyATTACK)){
+				UseBowAttack(hitUnit);
+			}
+			else {
+				UseSwordAttack (hitUnit);
+			}
 		} else if (hit) {
 			UnlockDoor(hit);
 		}
@@ -376,8 +381,8 @@ public class Player : Unit {
 		
 	}
 
-	// attacks the target area with the basic attack
-	void AttackEnemy (RaycastHit2D hitUnit) {
+	// Allows the player to do damage with their sword attack.
+	void UseSwordAttack (RaycastHit2D hitUnit) {
 		if (hitUnit.collider.gameObject.tag.Equals ("Enemy")) {
 			if (Input.GetKeyDown (KeyCode.RightArrow)) {
 				animator.SetTrigger ("PlayerSwordRight");
@@ -387,6 +392,46 @@ public class Player : Unit {
 				animator.SetTrigger ("PlayerSwordBackward");
 			} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
 				animator.SetTrigger ("PlayerSwordForward");
+			} 
+
+			string enemyType;
+			if(hitUnit.collider.gameObject.name.Contains("(Clone)")){
+				// Gets rid of the (Clone) in the object name.
+				enemyType = hitUnit.collider.gameObject.name.Substring(0,hitUnit.collider.gameObject.name.Length - 7);
+			}
+			else{
+				enemyType = hitUnit.collider.gameObject.name;
+			}
+			switch(enemyType){
+			case "Cynthia":
+				CalculateDamageDealt(hitUnit.collider.gameObject.GetComponent<Cynthia>());
+				if(hitUnit.collider.gameObject.GetComponent<Cynthia>().Health <= 0){
+					DefeatEnemy(hitUnit.collider.gameObject.GetComponent<Cynthia>());
+					Destroy (hitUnit.collider.gameObject);
+				}
+				break;
+			case "Moblin":
+				CalculateDamageDealt(hitUnit.collider.gameObject.GetComponent<Moblin>());
+				if(hitUnit.collider.gameObject.GetComponent<Moblin>().Health <= 0){
+					DefeatEnemy(hitUnit.collider.gameObject.GetComponent<Moblin>());
+					Destroy (hitUnit.collider.gameObject);
+				}
+				break;
+			}
+		}
+	}
+
+	// Allows the player to do damage with their bow attack.
+	void UseBowAttack(RaycastHit2D hitUnit){
+		if (hitUnit.collider.gameObject.tag.Equals ("Enemy")) {
+			if (Input.GetKeyDown (KeyCode.RightArrow)) {
+				animator.SetTrigger ("PlayerBowRight");
+			} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+				animator.SetTrigger ("PlayerBowLeft");
+			} else if (Input.GetKeyDown (KeyCode.UpArrow)) {
+				animator.SetTrigger ("PlayerBowBackward");
+			} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
+				animator.SetTrigger ("PlayerBowForward");
 			} 
 			string enemyType;
 			if(hitUnit.collider.gameObject.name.Contains("(Clone)")){
@@ -413,18 +458,15 @@ public class Player : Unit {
 				break;
 			}
 		}
-
-
-		state = 3;
-
-		state = 1;
-		return;
-		
 	}
 
     	//Restart reloads the scene when called.
     	private void Restart()
     	{
+			// Resets the player's position before starting the new level.
+			this.transform.position = new Vector3(0,0);
+			// Resets the player's animation to forward idle.
+			this.animator.Play ("PlayerForwardIdle");
     	    Application.LoadLevel(Application.loadedLevel);
     	}
 
@@ -505,12 +547,14 @@ public class Player : Unit {
 		}
 	}
 
+
+
 	void OnTriggerEnter2D(Collider2D collider){
 
 		//Check if the tag of the trigger collided with is Exit.
         	if (collider.gameObject.tag.Equals ("Exit") )
        	 	{
-        	    //Invoke the Restart function to start the next level with a delay of 1 second.
+        	   //Invoke the Restart function to start the next level with a delay of 1 second.
          	   Invoke("Restart", 0);
         	}
 

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
-	public GameObject player;
+	//public GameObject player;
 	//public GameObject cynthia;
     //public BoardManager boardScript;
     private int level = 1;
@@ -15,17 +15,17 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-		// Sets isHardMode's value.
-		isHardMode = false;
-
-		Instantiate (player);
+		if (isHardMode == null) {
+			// Sets isHardMode's value.
+			isHardMode = false;
+		}
 		//Instantiate (cynthia);
 
         //Check if instance already exists
         if (instance == null)
 
             //if not, set instance to this
-            instance = this;
+			instance = this;
 
         //If instance already exists and it's not this:
         else if (instance != this)
