@@ -33,12 +33,12 @@ public class BoardManager : MonoBehaviour {
 	
 	public void SetupBoard(){
 
-		int maxBoardHeight = 14;
-		int maxBoardWidth = 14;
+		int maxAdditionalBoardHeight = 6;
+		int maxAdditionalBoardWidth = 6;
 		int minDimension = 6;
 
-		rows = (int)(Random.value * maxBoardHeight) + minDimension;
-		columns = (int)(Random.value * maxBoardWidth) + minDimension;
+		rows = (int)(Random.value * maxAdditionalBoardHeight) + minDimension;
+		columns = (int)(Random.value * maxAdditionalBoardWidth) + minDimension;
 	
         boardTiles = new GameObject("BoardTiles").transform;
 
@@ -105,7 +105,7 @@ public class BoardManager : MonoBehaviour {
 		GenerateKeyItems ();
 
 		SpawnEnemies(0, 1);
-		SpawnEnemies(1, 4);
+		SpawnEnemies(1, 2);
 
 		// May generate items up to the specified number and place them on the board.
 		GenerateBasicItems ((rows+columns)/3);

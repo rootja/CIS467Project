@@ -27,11 +27,11 @@ public class Setup : MonoBehaviour {
 	}
 
 	public void SetupGame() {
-		if (playerNameField.text.Length > 0) {
-			player.GetComponent<Player> ().myName = playerNameField.text;
-		}
 		// Sets up the player before jumping to the new scene.
 		Instantiate (player, new Vector3 (0, 0), Quaternion.identity);
+		if (playerNameField.text.Length > 0) {
+			Player.myName = playerNameField.text;
+		}
 		// Tells the application to maintain the player gameobject when switching to the Game scene.
 		DontDestroyOnLoad (FindObjectOfType<Player>());
 		Application.LoadLevel("Game");

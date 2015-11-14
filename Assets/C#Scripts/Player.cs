@@ -65,7 +65,7 @@ public class Player : Unit {
 
 	GridAura gridInstance;
 	// A string variable that we can change while playing the game or outside Play mode.
-	public string myName;
+	public static string myName;
 
 	int[] stats;
 	
@@ -93,7 +93,7 @@ public class Player : Unit {
 
 	public static Player player = null;
 
-	public void InitPlayer(string playerName = "Link"){
+	public void InitPlayer(){
 
 		//DontDestroyOnLoad (this.gameObject);
 
@@ -101,7 +101,9 @@ public class Player : Unit {
 			player = this;
 		}
 
-		myName = playerName;
+		if (myName == null) {
+			myName = "Link";
+		}
 
 		this.Level = 1;
 		this.Health = 4;

@@ -14,11 +14,6 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
-		if (isHardMode == null) {
-			// Sets isHardMode's value.
-			isHardMode = false;
-		}
 		//Instantiate (cynthia);
 
         //Check if instance already exists
