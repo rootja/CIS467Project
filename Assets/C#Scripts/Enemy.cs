@@ -9,9 +9,9 @@ public abstract class Enemy : Unit {
 	public LayerMask blockingLayer;
 	public LayerMask unitsLayer;
 
-	public abstract void InitEnemy(int level);
+	public abstract void InitEnemy(int level, bool isHardMode);
 
-	public abstract void CalculateStats(int level);
+	public abstract void CalculateStats(int level, bool isHardMode);
 
 	// Use this for initialization
 	void Start () {

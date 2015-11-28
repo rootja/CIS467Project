@@ -8,11 +8,13 @@ public class Moblin : Enemy {
 
 	int numFrames;
 
-	public override void InitEnemy(int level) {
-		CalculateStats (level);
+	bool hardModeEnabled;
+
+	public override void InitEnemy(int level, bool isHardMode) {
+		CalculateStats (level, isHardMode);
 	}
 
-	public override void CalculateStats(int level){
+	public override void CalculateStats(int level, bool isHardMode){
 		this.Level = level;
 		this.Health = 3;
 		this.Attack = 1;
@@ -20,22 +22,37 @@ public class Moblin : Enemy {
 		this.Speed = 1;
 		this.Experience = 10 * level;
 
-		for(int i = 1; i < level; i++){
-			if(i % 2 == 0){
-				this.Health++;
-				this.Attack++;
-				this.Defense++;
+		// If we are on normal mode, then just follow the normal enemy stat calculations.
+		if (isHardMode == false) {
+			for (int i = 1; i < level; i++) {
+				if (i % 2 == 0) {
+					this.Health++;
+					this.Attack++;
+					this.Defense++;
+				} else {
+					this.Attack++;
+					this.Speed++;
+				}
 			}
-			else {
-				this.Attack++;
-				this.Speed++;
+		}
+		// Otherwise, if we are on hard mode, then the moblin will have enhanced health and attack stats.
+		else {
+			for (int i = 1; i < level; i++) {
+				if (i % 2 == 0) {
+					this.Health += 2;
+					this.Attack += 2;
+					this.Defense++;
+				} else {
+					this.Attack++;
+					this.Speed++;
+				}
 			}
 		}
 	}
 
 	// Initializes key variables for the Moblin enemy.
 	void Start () {
-		InitEnemy (1);
+		InitEnemy (1, GameManager.isHardMode);
 		numFrames = 0;
 		moblinAnimator = this.GetComponent<Animator> ();
 	}
@@ -85,6 +102,32 @@ public class Moblin : Enemy {
 		
 		if (!hit && !hitUnit) {
 			this.transform.position = endPosition;
+		}
+		if (hitUnit) {
+			AttackPlayer(hitUnit, direction);
+		}
+	}
+
+	void AttackPlayer(RaycastHit2D hitPlayer, int movementDirection){
+		if (hitPlayer.collider.gameObject.tag.Equals ("Player")) {
+			switch (movementDirection) {
+			case 0:
+				moblinAnimator.SetTrigger ("MoblinAttackForward");
+				break;
+			case 1:
+				moblinAnimator.SetTrigger ("MoblinAttackBackward");
+				break;
+			case 2:
+				moblinAnimator.SetTrigger ("MoblinAttackRight");
+				break;
+			case 3:
+				moblinAnimator.SetTrigger ("MoblinAttackLeft");
+				break;
+			}
+			CalculateDamageDealt (hitPlayer.collider.gameObject.GetComponent<Player> ());
+			if (hitPlayer.collider.gameObject.GetComponent<Player> ().Health <= 0) {
+				Destroy (hitPlayer.collider.gameObject);
+			}
 		}
 	}
 

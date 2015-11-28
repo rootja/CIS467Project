@@ -10,25 +10,57 @@ public class Cynthia : Enemy {
 
 	public static Vector3 currentPosition;
 
-	public override void InitEnemy(int level){
-		CalculateStats (level);
+	public override void InitEnemy(int level, bool isHardMode){
+		CalculateStats (level, isHardMode);
+
+		state = 0;
+		maxmoves = 1.0;
+		moves = maxmoves;
 	}
 
-	public override void CalculateStats(int level){
+	public override void CalculateStats(int level, bool isHardMode){
 		this.Level = level;
 		this.Health = 3;
 		this.Attack = 1;
 		this.Defense = 1;
 		this.Speed = 1;
-		this.Experience = 10 * level;
+		this.Experience = 20 * level;
 
-		for(int i = 1; i < level; i++){
+		int i = 0;
+		int j = 0;
+
+		for(i = 1; i < level; i++){
 			if(i % 2 == 0){
 				this.Health++;
 				this.Attack++;
 				this.Defense++;
-			}
-			else {
+				// If we are on normal mode, then just follow the normal enemy stat calculations.
+				if (isHardMode == false) {
+					for (j = 1; j < level; j++) {
+						if (i % 2 == 0) {
+							this.Health++;
+							this.Speed++;
+							this.Defense++;
+						} else {
+							this.Attack++;
+							this.Speed++;
+						}
+					}
+				}
+				// Otherwise, if we are on hard mode, then Cynthia will have enhanced health and speed stats.
+				else {
+					for (j = 1; j < level; j++) {
+						if (i % 2 == 0) {
+							this.Health += 2;
+							this.Speed++;
+							this.Defense++;
+						} else {
+							this.Attack++;
+							this.Speed += 2;
+						}
+					}
+				}
+			} else {
 				this.Attack++;
 				this.Speed++;
 			}
@@ -37,7 +69,7 @@ public class Cynthia : Enemy {
 
 	// Use this for initialization
 	void Start () {
-		InitEnemy (1);
+		InitEnemy (1, GameManager.isHardMode);
 		numFrames = 0;
 		animator = GetComponent<Animator> ();
 	}
@@ -48,6 +80,15 @@ public class Cynthia : Enemy {
 		// than 1.
 		int damage = (this.Attack > player.Defense) ? this.Attack - player.Defense : 1;
 		player.Health -= damage;
+		// Ititializes the player stats.
+		//InitPlayer (1, GameManager.isHardMode);
+		/*int xPos = 0;
+		int yPos = 0;
+		while(xPos == 0 && yPos == 0){
+			xPos = Random.Range(0,rows);
+			yPos = Random.Range(0,columns);
+		}
+		this.transform.position = new Vector3(xPos,yPos,0);*/
 	}
 
 	public override void Move(){

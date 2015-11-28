@@ -109,6 +109,9 @@ public class PauseScript : MonoBehaviour {
 			isPaused = false;
 			ToggleAudio();
 			LockInput(false);
+
+			// Removes the player object.
+			Destroy (FindObjectOfType<Player> ());
 			Application.LoadLevel(0);
 		}
     }
